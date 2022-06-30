@@ -14,6 +14,11 @@
 		<script>document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/, 'js');</script>
 
 		<style>
+			:root {
+				--header-height: 48px;
+				--icon-width-height: 48px;
+			}
+
 			html,
 			body {
 				margin: 0;
@@ -28,13 +33,18 @@
 				line-height: 1.625em;
 			}
 
+			body {
+				padding-top: var(--header-height);
+			}
+
 			.menu {
 				position: fixed;
-				width: 100%;
-				height: 48px;
+				top: 0;
 
 				display: flex;
 				align-items: center;
+				width: 100%;
+				height: var(--header-height);
 
 				background-color: rgba(0, 0, 0, 0.9);
 				color: #cfcfcf;
@@ -52,13 +62,13 @@
 
 			.menu__button {
 				display: block;
-				width: 48px;
-				height: 48px;
+				width: var(--icon-width-height);
+				height: var(--icon-width-height);
 			}
 
 			.menu__logo {
 				flex-grow: 1;
-				margin-right: 48px;
+				margin-right: var(--icon-width-height);
 
 				text-align: center;
 			}
@@ -74,6 +84,10 @@
 				Apfel
 			</a>
 		</header>
+
+		<main role="main">
+			<p>Content</p>
+		</main>
 
 		<script>
 			(function () {
