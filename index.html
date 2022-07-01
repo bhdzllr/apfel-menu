@@ -41,14 +41,21 @@
 				position: fixed;
 				top: 0;
 
-				display: flex;
-				align-items: center;
 				width: 100%;
 				height: var(--header-height);
+				overflow: hidden;
 
 				background-color: rgba(0, 0, 0, 0.9);
+				transition: all 0.5s ease-in-out;
+
 				color: #cfcfcf;
 				font-size: 1rem;
+			}
+
+			.menu:target {
+				height: 100vh;
+
+				background-color: rgba(0, 0, 0, 1);
 			}
 
 			.menu a {
@@ -60,10 +67,37 @@
 				color: #f5f5f7;
 			}
 
-			.menu__button {
-				display: block;
+			.menu__panel {
+				position: relative;
+
+				display: flex;
+				align-items: center;
+			}
+
+			.menu__opener,
+			.menu__closer {
 				width: var(--icon-width-height);
 				height: var(--icon-width-height);
+			}
+
+			.menu__opener {
+				display: block;
+				visibility: visible;
+			}
+
+			#menu:target .menu__opener {
+				display: none;
+				visibility: hidden;
+			}
+
+			.menu__closer {
+				display: none;
+				visibility: hidden;
+			}
+
+			#menu:target .menu__closer {
+				display: block;
+				visibility: visible;
 			}
 
 			.menu__logo {
@@ -72,21 +106,71 @@
 
 				text-align: center;
 			}
+
+			nav {
+				position: relative;
+				visibility: hidden;
+
+				height: calc(100% - var(--header-height));
+			}
+
+			#menu:target nav {
+				visibility: visible;
+			}
+
+			nav ul {
+				max-width: 640px;
+				max-height: 100%;
+				margin: 0 auto;
+				padding: 40px;
+				overflow-y: hidden;
+				box-sizing: border-box;
+			}
+
+			main {
+				padding: 1rem;
+			}
+
+			.text-center {
+				text-align: center;
+			}
 		</style>
 	</head>
 	<body>
-		<header class="menu">
-			<a href="#menu" class="menu__button">
-				Menu
-			</a>
+		<header id="menu" class="menu">
+			<div class="menu__panel">
+				<a href="#menu" class="menu__opener" hidden>
+					Menu
+				</a>
+				<a href="#" class="menu__closer" hidden>
+					Close
+				</a>
 
-			<a href="/" class="menu__logo">
-				Apfel
-			</a>
+				<a href="/" class="menu__logo">
+					Apfel
+				</a>
+			</div>
+
+			<nav>
+				<ul>
+					<li><a href="#">Store</a></li>
+					<li><a href="#">Mac</a></li>
+					<li><a href="#">iPad</a></li>
+					<li><a href="#">iPhone</a></li>
+					<li><a href="#">Watch</a></li>
+					<li><a href="#">AirPods</a></li>
+					<li><a href="#">TV & Home</a></li>
+					<li><a href="#">Nur mit Apple</a></li>
+					<li><a href="#">Zubehör</a></li>
+					<li><a href="#">Support</a></li>
+				</ul>
+			</nav>
 		</header>
 
 		<main role="main">
-			<p>Content</p>
+			<p class="text-center">
+				Made by <a href="https://twitter.com/bhdzllr">@bhdzllr</a>.
+			</p>
 		</main>
 
 		<script>
