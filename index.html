@@ -17,6 +17,7 @@
 			:root {
 				--header-height: 48px;
 				--icon-width-height: 48px;
+				--menu-slide-down-duration: 0.5s;
 			}
 
 			html,
@@ -46,7 +47,7 @@
 				overflow: hidden;
 
 				background-color: rgba(0, 0, 0, 0.9);
-				transition: all 0.5s ease-in-out;
+				transition: all var(--menu-slide-down-duration) ease-in-out;
 
 				color: #cfcfcf;
 				font-size: 1rem;
@@ -112,6 +113,8 @@
 				visibility: hidden;
 
 				height: calc(100% - var(--header-height));
+
+				transition: visibility var(--menu-slide-down-duration) ease;
 			}
 
 			#menu:target nav {
@@ -125,6 +128,79 @@
 				padding: 40px;
 				overflow-y: hidden;
 				box-sizing: border-box;
+
+				/*list-style: none;*/
+			}
+
+			#menu:target nav ul {
+				overflow-y: auto;
+				animation: nav-overflow var(--menu-slide-down-duration) ease forwards;
+			}
+
+			/** Delay overflow-y until menu animation is done */
+			@keyframes nav-overflow {
+				0% { overflow-y: hidden; }
+				99% { overflow-y: hidden; }
+				100% { overflow-y: auto; }
+			}
+
+			nav ul li {
+				display: block;
+
+				opacity: 0;
+				transform: translateY(-40px);
+			}
+
+			#menu:target nav ul li {
+				opacity: 1;
+				transform: none;
+			}
+
+			nav ul li:nth-child(1)  { transition: opacity 0.45s ease 0.13s, transform 0.48s ease 0.12s; }
+			nav ul li:nth-child(2)  { transition: opacity 0.45s ease 0.12s, transform 0.48s ease 0.11s; }
+			nav ul li:nth-child(3)  { transition: opacity 0.45s ease 0.11s, transform 0.48s ease 0.10s; }
+			nav ul li:nth-child(4)  { transition: opacity 0.45s ease 0.10s, transform 0.48s ease 0.09s; }
+			nav ul li:nth-child(5)  { transition: opacity 0.45s ease 0.09s, transform 0.48s ease 0.08s; }
+			nav ul li:nth-child(6)  { transition: opacity 0.45s ease 0.08s, transform 0.48s ease 0.07s; }
+			nav ul li:nth-child(7)  { transition: opacity 0.45s ease 0.07s, transform 0.48s ease 0.06s; }
+			nav ul li:nth-child(8)  { transition: opacity 0.45s ease 0.06s, transform 0.48s ease 0.05s; }
+			nav ul li:nth-child(9)  { transition: opacity 0.45s ease 0.05s, transform 0.48s ease 0.04s; }
+			nav ul li:nth-child(10) { transition: opacity 0.45s ease 0.04s, transform 0.48s ease 0.03s; }
+
+			#menu:target nav ul li:nth-child(1)  { transition: opacity 0.45s ease 0.03s, transform 0.48s ease 0.02s; }
+			#menu:target nav ul li:nth-child(2)  { transition: opacity 0.45s ease 0.04s, transform 0.48s ease 0.03s; }
+			#menu:target nav ul li:nth-child(3)  { transition: opacity 0.45s ease 0.05s, transform 0.48s ease 0.04s; }
+			#menu:target nav ul li:nth-child(4)  { transition: opacity 0.45s ease 0.06s, transform 0.48s ease 0.05s; }
+			#menu:target nav ul li:nth-child(5)  { transition: opacity 0.45s ease 0.07s, transform 0.48s ease 0.06s; }
+			#menu:target nav ul li:nth-child(6)  { transition: opacity 0.45s ease 0.08s, transform 0.48s ease 0.07s; }
+			#menu:target nav ul li:nth-child(7)  { transition: opacity 0.45s ease 0.09s, transform 0.48s ease 0.08s; }
+			#menu:target nav ul li:nth-child(8)  { transition: opacity 0.45s ease 0.10s, transform 0.48s ease 0.09s; }
+			#menu:target nav ul li:nth-child(9)  { transition: opacity 0.45s ease 0.11s, transform 0.48s ease 0.10s; }
+			#menu:target nav ul li:nth-child(10) { transition: opacity 0.45s ease 0.12s, transform 0.48s ease 0.11s; }
+
+			nav ul li:first-child::before {
+				content: none;
+			}
+
+			nav ul li::before {
+				content: '';
+				display: block;
+				width: 100%;
+				height: 1px;
+
+				background-color: #424245;
+			}
+
+			nav ul li a {
+				display: flex;
+				align-items: center;
+				height: 45px;
+
+				transition: color 0.4s ease;
+
+				color: #cfcfcf;
+				font-size: 1em;
+				text-decoration: none;
 			}
 
 			main {
@@ -169,7 +245,7 @@
 
 		<main role="main">
 			<p class="text-center">
-				Made by <a href="https://twitter.com/bhdzllr">@bhdzllr</a>.
+				Made by <a href="https://twitter.com/bhdzllr">@bhdzllr</a>
 			</p>
 		</main>
 
