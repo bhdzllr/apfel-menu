@@ -28,10 +28,18 @@
 				background: #ffffff;
 				
 				color: #222222;
-				font-family: 'SF Pro Text', 'Myriad Set Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+				font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 				font-size: 1em;
 				font-weight: lighter;
 				line-height: 1.625em;
+			}
+
+			@media only screen and (min-resolution: 192dpi) {
+				html,
+				body {
+					font-weight: normal;
+					color: red !important;
+				}
 			}
 
 			body {
@@ -275,7 +283,7 @@
 			nav ul li a {
 				display: flex;
 				align-items: center;
-				height: 2.65em;
+				height: 2.5em;
 
 				transition: color 0.4s ease;
 
