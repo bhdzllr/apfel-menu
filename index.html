@@ -28,7 +28,7 @@
 				background: #ffffff;
 				
 				color: #222222;
-				font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+				font-family: 'SF Pro Text', 'Myriad Set Pro', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 				font-size: 1em;
 				font-weight: lighter;
 				line-height: 1.625em;
@@ -49,16 +49,16 @@
 				overflow: hidden;
 
 				background-color: rgba(0, 0, 0, 0.9);
-				transition: all var(--menu-slide-down-duration) ease-in-out;
+				transition: height var(--menu-slide-down-duration) ease-in-out, background-color calc(var(--menu-slide-down-duration) / 2) ease calc(var(--menu-slide-down-duration) / 2);
 
 				color: #cfcfcf;
-				font-size: 1rem;
 			}
 
 			.menu:target {
 				height: 100vh;
 
 				background-color: rgba(0, 0, 0, 1);
+				transition: height var(--menu-slide-down-duration) ease-in-out, background-color calc(var(--menu-slide-down-duration) / 4) ease;
 			}
 
 			.menu a {
@@ -79,6 +79,10 @@
 
 			.menu__action {
 				position: relative;
+			}
+
+			.menu__action:hover svg line {
+				stroke: #ffffff;
 			}
 
 			/** ********** Menu buttons ********** */
@@ -114,61 +118,61 @@
 
 			/** ********** Menu Icon ********** */
 
-			.menu-icon {
+			.icon-menu-container {
 				position: absolute;
 				top: 50%;
 				left: 50%;
 				z-index: 1;
 
 				display: block;
-				width: 30px;
-				height: 30px;
+				width: 1.875em;
+				height: 1.875em;
 
 				transform: translate(-50%, -50%);
 			}
 
-			.menu-icon svg {
+			.icon-menu {
 				display: block;
 				width: 100%;
 				height: 100%;
 			}
 
-			.menu-icon g,
-			.menu-icon g line {
+			.icon-menu g,
+			.icon-menu g line {
 				transform-origin: center;
 				transform-box: fill-box;
 			}
 
-			.menu a:focus ~ .menu-icon line,
-			.menu a:hover ~ .menu-icon line,
-			.menu a:active ~ .menu-icon line {
+			.menu a:focus ~ .icon-menu-container line,
+			.menu a:hover ~ .icon-menu-container line,
+			.menu a:active ~ .icon-menu-container line {
 				stroke: #f5f5f7;
 			}
 
-			.menu-icon g {
+			.icon-menu g {
 				transition: transform 0.175s ease 0.175s;
 			}
 
-			.menu-icon g line {
+			.icon-menu g line {
 				transition: transform 0.175s ease;
 			}
 
-			#menu:target .menu-icon g:first-child {
+			#menu:target .icon-menu g:first-child {
 				transform: translate(0, 3.5px);
 				transition: transform 0.175s ease;
 			}
 
-			#menu:target .menu-icon g:first-child line {
+			#menu:target .icon-menu g:first-child line {
 				transform: rotate(45deg);
 				transition: transform 0.175s ease 0.175s;
 			}
 
-			#menu:target .menu-icon g:last-child {
+			#menu:target .icon-menu g:last-child {
 				transform: translate(0, -3.5px);
 				transition: transform 0.175s ease;
 			}
 
-			#menu:target .menu-icon g:last-child line {
+			#menu:target .icon-menu g:last-child line {
 				transform: rotate(-45deg);
 				transition: transform 0.175s ease 0.175s;
 			}
@@ -202,7 +206,7 @@
 				max-width: 640px;
 				max-height: 100%;
 				margin: 0 auto;
-				padding: 40px;
+				padding: 0.375em 2.5em 2.5em;
 				overflow-y: hidden;
 				box-sizing: border-box;
 
@@ -225,7 +229,7 @@
 				display: block;
 
 				opacity: 0;
-				transform: translateY(-40px);
+				transform: translateY(-2.5em);
 			}
 
 			#menu:target nav ul li {
@@ -271,13 +275,199 @@
 			nav ul li a {
 				display: flex;
 				align-items: center;
-				height: 45px;
+				height: 2.65em;
 
 				transition: color 0.4s ease;
 
 				color: #cfcfcf;
-				font-size: 1em;
+				font-size: 1.0625em;
 				text-decoration: none;
+			}
+
+			/** ********** Search ********* */
+
+			.search {
+				position: relative;
+			}
+
+			.search::after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+
+				content: '';
+				display: block;
+				height: 1px;
+
+				background-color: #424245;
+				opacity: 0;
+				transform: translateY(-1.250em);
+				transition: transform var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2), opacity var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2);
+			}
+
+			#menu:target .search::after {
+				opacity: 1;
+				transform: none;
+				transition: all var(--menu-slide-down-duration) ease;
+			}
+
+			.search fieldset {
+				position: relative;
+
+				display: flex;
+				max-width: 560px;
+				margin: 0 auto;
+				padding: 0 0.625em 1em;
+
+				border: none;
+			}
+
+			.search p {
+				margin: 0;
+			}
+
+			.search-field-container {
+				position: relative;
+
+				width: 100%;
+			}
+
+			.search-field-container::before {
+				position: absolute;
+				top: 0;
+
+				content: '';
+				display: block;
+				width: 100%;
+				height: 100%;
+
+				background-color: #1d1d1f;
+				border-radius: 0.5em;
+				transform: scaleY(0);
+				transform-origin: 0 0;
+				transition: transform var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2);
+			}
+
+			#menu:target .search-field-container::before {
+				transform: none;
+				transition: transform var(--menu-slide-down-duration) ease;
+			}
+
+			.search__field {
+				position: relative;
+
+				flex-grow: 1;
+
+				opacity: 0;
+				transform: translateY(-0.625em);
+				transition: all calc(var(--menu-slide-down-duration) / 2) ease calc(var(--menu-slide-down-duration) / 2);
+			}
+
+			#menu:target .search__field {
+				opacity: 1;
+				transform: none;
+				transition: all calc(var(--menu-slide-down-duration) / 2) ease;
+			}
+
+			.search__field label {
+				position: absolute;
+				top: 50%;
+				z-index: 1;
+
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 1.75em;
+				height: 100%;
+
+				transform: translateY(-50%);
+			}
+
+			.icon-search {
+				display: block;
+				width: 1em;
+				height: 1em;
+			}
+
+			.search [type="search"] {
+				position: relative;
+
+				width: 100%;
+				height: 2.25em;
+				padding: 0.175em 1.765em 0.235em;
+				box-sizing: border-box;
+
+				background-color: transparent;
+				border: none;
+				border-radius: 0.5em;
+				outline: none;
+
+				color: #ffffff;
+				font-size: 1.0625em;;
+				font-family: inherit;
+				font-weight: normal;
+			}
+
+			.search [type="search"]::placeholder {
+				color: #6e6e73;
+			}
+
+			.search [type="search"]:valid + [type="reset"] {
+				display: flex;
+			}
+
+			.search [type="search"]:invalid + [type="reset"] {
+				display: none;
+			}
+
+			.search [type="reset"] {
+				position: absolute;
+				top: 50%;
+				right: 0;
+
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 1.875em;
+				height: 100%;
+				padding: 0;
+
+				background: none;
+				border: none;
+				border-radius: 50%;
+				cursor: pointer;
+				transform: translateY(-50%);
+
+				font-size: inherit;
+			}
+
+			.search [type="reset"] svg {
+				display: block;
+				width: 0.5em;
+				height: 0.5em;
+				padding: 0.25em;
+
+				background-color: #86868b;
+				border-radius: 50%;
+			}
+
+			.search__cancel {
+				/*display: flex;*/
+				display: none;
+				align-items: center;
+				margin-left: 0.625em;
+				padding: 0 0.5em;
+
+				background: none;
+				border: none;
+				border-radius: 0;
+				cursor: pointer;
+
+				color: #2997ff;
+				font-size: inherit;
+				font-family: inherit;
+				font-weight: inherit;
 			}
 
 			/** ********** Main ********** */
@@ -324,8 +514,8 @@
 		<header id="menu" class="menu">
 			<div class="menu__panel">
 				<div class="menu__action">
-					<div class="menu-icon" aria-hidden="true" hidden>
-						<svg viewBox="0 0 30 30" width="30px" height="30px" aria-hidden="true">
+					<div class="icon-menu-container" aria-hidden="true" hidden>
+						<svg viewBox="0 0 30 30" width="30px" height="30px" class="icon-menu" aria-hidden="true">
 							<g>
 								<line x1="8" y1="11.5" x2="23" y2="11.5" stroke="#cfcfcf" stroke-linecap="round" />
 							</g>
@@ -347,6 +537,51 @@
 					<span class="screen-reader-text">Apfel</span>
 				</a>
 			</div>
+
+			<form class="search" novalidate>
+				<fieldset>
+					<div class="search-field-container">
+						<p class="search__field">
+							<label for="search-text">
+								<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-search" aria-hidden="true">
+									<g fill="transparent" stroke="#86868b" stroke-width="1.25" stroke-linecap="round"> 
+										<circle cx="4" cy="4" r="3" />
+										<line x1="6" y1="6" x2="9" y2="9" />
+									</g>
+								</svg>
+								<span class="screen-reader-text">Search Text</span>
+							</label>
+							<input
+								type="search"
+								name="search-text"
+								id="search-text"
+								placeholder="Search apple.com"
+								autocomplete="off"
+								autocorrect="off"
+								autocapitalize="none"
+								spellcheck="false"
+								required
+							/>
+
+							<button type="reset">
+								<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-reset" aria-hidden="true">
+									<g stroke="#1d1d1f" stroke-width="1.25" stroke-linecap="round">
+										<line x1="0" y1="0" x2="10" y2="10" />
+										<line x1="0" y1="10" x2="10" y2="0" />
+									</g>
+								</svg>
+								<span class="screen-reader-text">Reset</span>
+							</button>
+						</p>
+					</div>
+
+					<input type="submit" value="Search" class="screen-reader-text" />
+
+					<button class="search__cancel">
+						<span>Cancel</span>
+					</button>
+				</fieldset>
+			</form>
 
 			<nav>
 				<ul>
