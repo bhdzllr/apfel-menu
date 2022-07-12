@@ -20,6 +20,12 @@
 				--menu-slide-down-duration: 0.5s;
 			}
 
+			:focus {
+				outline: 2px solid #2997ff;
+				outline-offset: 2px;
+				z-index: 1;
+			}
+
 			html,
 			body {
 				margin: 0;
@@ -460,9 +466,9 @@
 				border-radius: 50%;
 			}
 
+			.search__submit,
 			.search__cancel {
-				/*display: flex;*/
-				display: none;
+				display: flex;
 				align-items: center;
 				margin-left: 0.625em;
 				padding: 0 0.5em;
@@ -476,6 +482,10 @@
 				font-size: inherit;
 				font-family: inherit;
 				font-weight: inherit;
+			}
+
+			.search__cancel {
+				display: none;
 			}
 
 			/** ********** Main ********** */
@@ -585,7 +595,7 @@
 						</p>
 					</div>
 
-					<input type="submit" value="Search" class="screen-reader-text" />
+					<input type="submit" value="Search" class="search__submit screen-reader-text screen-reader-text--focusable" />
 
 					<button class="search__cancel">
 						<span>Cancel</span>
