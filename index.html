@@ -439,6 +439,7 @@
 				position: absolute;
 				top: 50%;
 				right: 0;
+				z-index: 1;
 
 				display: flex;
 				justify-content: center;
@@ -456,7 +457,7 @@
 				font-size: inherit;
 			}
 
-			.search [type="reset"] svg {
+			.search [type="reset"] svg {	
 				display: block;
 				width: 0.5em;
 				height: 0.5em;
@@ -542,10 +543,10 @@
 							</g>
 						</svg>
 					</div>
-					<a href="#menu" class="menu__opener" hidden>
+					<a href="#menu" class="menu__opener js-menu-button" hidden>
 						<span class="screen-reader-text">Menu</span>
 					</a>
-					<a href="#" class="menu__closer" hidden>
+					<a href="#" class="menu__closer js-menu-button" hidden>
 						<span class="screen-reader-text">Close</span>
 					</a>
 				</div>
@@ -576,6 +577,7 @@
 								name="search-text"
 								id="search-text"
 								placeholder="Search apple.com"
+								class="js-search-text"
 								autocomplete="off"
 								autocorrect="off"
 								autocapitalize="none"
@@ -583,7 +585,7 @@
 								required
 							/>
 
-							<button type="reset">
+							<button type="reset" class="js-search-reset">
 								<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-reset" aria-hidden="true">
 									<g stroke="#1d1d1f" stroke-width="1.25" stroke-linecap="round">
 										<line x1="0" y1="0" x2="10" y2="10" />
@@ -597,7 +599,7 @@
 
 					<input type="submit" value="Search" class="search__submit screen-reader-text screen-reader-text--focusable" />
 
-					<button class="search__cancel">
+					<button class="search__cancel" hidden>
 						<span>Cancel</span>
 					</button>
 				</fieldset>
@@ -628,7 +630,49 @@
 		<script>
 			(function () {
 
-				console.debug('Standalone...');
+				function main() {
+					addRoleButton();
+					addRoleButtonListener();
+
+					document.querySelectorAll('.js-menu-button')[0].addEventListener('click', function () {
+						setTimeout(() => document.querySelectorAll('.js-menu-button')[1].focus(), 1);
+					});
+
+					document.querySelectorAll('.js-menu-button')[1].addEventListener('click', function () {
+						setTimeout(() => document.querySelectorAll('.js-menu-button')[0].focus(), 1);
+					});
+
+					document.querySelector('.js-search-reset').addEventListener('click', function () {
+						document.querySelector('.js-search-text').focus();
+					});
+				}
+
+				function addRoleButton() {
+					const buttons = document.querySelectorAll('.js-menu-button');
+
+					for (let i = 0; i < buttons.length; i++) {
+						buttons[i].setAttribute('role', 'button');
+					}
+				}
+
+				function addRoleButtonListener(exceptions = []) {
+					const buttons = document.querySelectorAll('[role="button"]');
+
+					for (let i = 0; i < buttons.length; i++) {
+						if (exceptions.indexOf(buttons[i].nodeName.toLowerCase()) > -1) continue;
+
+						buttons[i].addEventListener('keydown', function (e) {
+							const keyCode = e.which || e.keyCode;
+
+							if (keyCode === 13 || keyCode === 32) {
+								e.preventDefault();
+								buttons[i].click();
+							}
+						});
+					}
+				}
+
+				main();				
 
 			})();
 		</script>
