@@ -191,9 +191,9 @@
 
 			nav {
 				position: relative;
-				visibility: hidden;
 
 				height: calc(100% - var(--header-height));
+				visibility: hidden;
 
 				transition: visibility var(--menu-slide-down-duration) ease;
 			}
@@ -288,6 +288,14 @@
 
 			.search {
 				position: relative;
+
+				visibility: hidden;
+
+				transition: visibility var(--menu-slide-down-duration) ease;
+			}
+
+			#menu:target .search {
+				visibility: visible;
 			}
 
 			.search::after {
@@ -532,10 +540,12 @@
 					</a>
 				</div>
 
-				<a href="/" class="menu__logo">
-					<span aria-hidden="true">&clubs;</span> <!-- &#9787; -->
-					<span class="screen-reader-text">Apfel</span>
-				</a>
+				<div class="menu__logo">
+					<a href="/" class="menu__log">
+						<span aria-hidden="true">&clubs;</span> <!-- &#9787; -->
+						<span class="screen-reader-text">Apfel</span>
+					</a>
+				</div>
 			</div>
 
 			<form class="search" novalidate>
