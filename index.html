@@ -513,6 +513,8 @@
 			}
 
 			.search__submit,
+			.search__submit.screen-reader-text--focusable:focus,
+			.search__submit.screen-reader-text--focusable:active,
 			.search__cancel {
 				display: flex;
 				align-items: center;
@@ -749,11 +751,11 @@
 				}
 
 				function initMenuButtonListeners() {
-					document.querySelectorAll('.js-menu-button')[0].addEventListener('click', function () {
+					document.querySelectorAll('.js-menu-button')[0].addEventListener('click', function (e) {
 						setTimeout(() => document.querySelectorAll('.js-menu-button')[1].focus(), 1);
 					});
 
-					document.querySelectorAll('.js-menu-button')[1].addEventListener('click', function () {
+					document.querySelectorAll('.js-menu-button')[1].addEventListener('click', function (e) {
 						setTimeout(() => document.querySelectorAll('.js-menu-button')[0].focus(), 1);
 					});
 
@@ -767,7 +769,9 @@
 						document.querySelector('.js-menu').classList.add('menu--search');
 					});
 
-					document.querySelector('.js-search-cancel').addEventListener('click', function () {
+					document.querySelector('.js-search-cancel').addEventListener('click', function (e) {
+						e.preventDefault();
+						document.querySelector('.js-search-text').value = '';
 						document.querySelector('.js-menu').classList.remove('menu--search');
 					});
 				}
