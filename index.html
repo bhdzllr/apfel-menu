@@ -61,10 +61,15 @@
 			}
 
 			.menu:target {
-				height: 100vh;
+				height: calc(100vh + var(--header-height));
 
 				background-color: rgba(0, 0, 0, 1);
-				transition: height var(--menu-slide-down-duration) ease-in-out, background-color calc(var(--menu-slide-down-duration) / 4) ease;
+				transition: height var(--menu-slide-down-duration) ease-in-out, background-color calc(var(--menu-slide-down-duration) / 4) ease, transform var(--menu-slide-down-duration) ease;
+			}
+
+			.menu--search:target {
+				transform: translateY(calc(var(--header-height) * -1 + 1em));
+				transition: transform var(--menu-slide-down-duration) ease;
 			}
 
 			.menu a {
@@ -107,7 +112,7 @@
 				visibility: visible;
 			}
 
-			#menu:target .menu__opener {
+			.menu:target .menu__opener {
 				display: none;
 				visibility: hidden;
 			}
@@ -117,7 +122,7 @@
 				visibility: hidden;
 			}
 
-			#menu:target .menu__closer {
+			.menu:target .menu__closer {
 				display: block;
 				visibility: visible;
 			}
@@ -163,22 +168,22 @@
 				transition: transform 0.175s ease;
 			}
 
-			#menu:target .icon-menu g:first-child {
+			.menu:target .icon-menu g:first-child {
 				transform: translate(0, 3.5px);
 				transition: transform 0.175s ease;
 			}
 
-			#menu:target .icon-menu g:first-child line {
+			.menu:target .icon-menu g:first-child line {
 				transform: rotate(45deg);
 				transition: transform 0.175s ease 0.175s;
 			}
 
-			#menu:target .icon-menu g:last-child {
+			.menu:target .icon-menu g:last-child {
 				transform: translate(0, -3.5px);
 				transition: transform 0.175s ease;
 			}
 
-			#menu:target .icon-menu g:last-child line {
+			.menu:target .icon-menu g:last-child line {
 				transform: rotate(-45deg);
 				transition: transform 0.175s ease 0.175s;
 			}
@@ -189,8 +194,16 @@
 				flex-grow: 1;
 				margin-right: var(--icon-width-height);
 
+				transform: scale(1);
+				transition: transform 0.1s ease;
+
 				font-size: 1.75em;
 				text-align: center;
+			}
+
+			.menu--search:target .menu__logo {
+				transform: scale(0.5);
+				transition: transform 0.2s ease calc(var(--menu-slide-down-duration) / 2);
 			}
 
 			/** ********** Navigation ********** */
@@ -198,28 +211,31 @@
 			nav {
 				position: relative;
 
-				height: calc(100% - var(--header-height));
+				height: calc(100% - var(--header-height) - 6.5em);
 				visibility: hidden;
 
 				transition: visibility var(--menu-slide-down-duration) ease;
 			}
 
-			#menu:target nav {
+			.menu:target nav {
 				visibility: visible;
 			}
 
-			nav ul {
+			.nav-container {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+
 				max-width: 640px;
 				max-height: 100%;
 				margin: 0 auto;
-				padding: 0.375em 2.5em 2.5em;
+				padding: 0.375em 2.5em 0.5em;
 				overflow-y: hidden;
 				box-sizing: border-box;
-
-				list-style: none;
 			}
 
-			#menu:target nav ul {
+			.menu:target .nav-container {
 				overflow-y: auto;
 				animation: nav-overflow var(--menu-slide-down-duration) ease forwards;
 			}
@@ -231,45 +247,65 @@
 				100% { overflow-y: auto; }
 			}
 
-			nav ul li {
+			.menu--search:target .nav-container {
+				overflow-y: hidden;
+				animation: none;
+			}
+
+			.nav-list {
+				display: block;
+				margin: 0;
+				padding: 0;
+
+				list-style: none;
+				transition: all var(--menu-slide-down-duration) ease;
+			}
+
+			.menu--search:target .nav-list--main {
+				visibility: hidden;
+				opacity: 0;
+				transform: translateY(40px);
+			}
+
+			.nav-list li {
 				display: block;
 
 				opacity: 0;
 				transform: translateY(-2.5em);
 			}
 
-			#menu:target nav ul li {
+			.menu:target .nav-list li {
 				opacity: 1;
 				transform: none;
 			}
 
-			nav ul li:nth-child(1)  { transition: opacity 0.45s ease 0.13s, transform 0.48s ease 0.12s; }
-			nav ul li:nth-child(2)  { transition: opacity 0.45s ease 0.12s, transform 0.48s ease 0.11s; }
-			nav ul li:nth-child(3)  { transition: opacity 0.45s ease 0.11s, transform 0.48s ease 0.10s; }
-			nav ul li:nth-child(4)  { transition: opacity 0.45s ease 0.10s, transform 0.48s ease 0.09s; }
-			nav ul li:nth-child(5)  { transition: opacity 0.45s ease 0.09s, transform 0.48s ease 0.08s; }
-			nav ul li:nth-child(6)  { transition: opacity 0.45s ease 0.08s, transform 0.48s ease 0.07s; }
-			nav ul li:nth-child(7)  { transition: opacity 0.45s ease 0.07s, transform 0.48s ease 0.06s; }
-			nav ul li:nth-child(8)  { transition: opacity 0.45s ease 0.06s, transform 0.48s ease 0.05s; }
-			nav ul li:nth-child(9)  { transition: opacity 0.45s ease 0.05s, transform 0.48s ease 0.04s; }
-			nav ul li:nth-child(10) { transition: opacity 0.45s ease 0.04s, transform 0.48s ease 0.03s; }
+			.nav-list li:nth-child(1)  { transition: opacity 0.45s ease 0.13s, transform 0.48s ease 0.12s; }
+			.nav-list li:nth-child(2)  { transition: opacity 0.45s ease 0.12s, transform 0.48s ease 0.11s; }
+			.nav-list li:nth-child(3)  { transition: opacity 0.45s ease 0.11s, transform 0.48s ease 0.10s; }
+			.nav-list li:nth-child(4)  { transition: opacity 0.45s ease 0.10s, transform 0.48s ease 0.09s; }
+			.nav-list li:nth-child(5)  { transition: opacity 0.45s ease 0.09s, transform 0.48s ease 0.08s; }
+			.nav-list li:nth-child(6)  { transition: opacity 0.45s ease 0.08s, transform 0.48s ease 0.07s; }
+			.nav-list li:nth-child(7)  { transition: opacity 0.45s ease 0.07s, transform 0.48s ease 0.06s; }
+			.nav-list li:nth-child(8)  { transition: opacity 0.45s ease 0.06s, transform 0.48s ease 0.05s; }
+			.nav-list li:nth-child(9)  { transition: opacity 0.45s ease 0.05s, transform 0.48s ease 0.04s; }
+			.nav-list li:nth-child(10) { transition: opacity 0.45s ease 0.04s, transform 0.48s ease 0.03s; }
 
-			#menu:target nav ul li:nth-child(1)  { transition: opacity 0.45s ease 0.03s, transform 0.48s ease 0.02s; }
-			#menu:target nav ul li:nth-child(2)  { transition: opacity 0.45s ease 0.04s, transform 0.48s ease 0.03s; }
-			#menu:target nav ul li:nth-child(3)  { transition: opacity 0.45s ease 0.05s, transform 0.48s ease 0.04s; }
-			#menu:target nav ul li:nth-child(4)  { transition: opacity 0.45s ease 0.06s, transform 0.48s ease 0.05s; }
-			#menu:target nav ul li:nth-child(5)  { transition: opacity 0.45s ease 0.07s, transform 0.48s ease 0.06s; }
-			#menu:target nav ul li:nth-child(6)  { transition: opacity 0.45s ease 0.08s, transform 0.48s ease 0.07s; }
-			#menu:target nav ul li:nth-child(7)  { transition: opacity 0.45s ease 0.09s, transform 0.48s ease 0.08s; }
-			#menu:target nav ul li:nth-child(8)  { transition: opacity 0.45s ease 0.10s, transform 0.48s ease 0.09s; }
-			#menu:target nav ul li:nth-child(9)  { transition: opacity 0.45s ease 0.11s, transform 0.48s ease 0.10s; }
-			#menu:target nav ul li:nth-child(10) { transition: opacity 0.45s ease 0.12s, transform 0.48s ease 0.11s; }
+			.menu:target .nav-list li:nth-child(1)  { transition: opacity 0.45s ease 0.03s, transform 0.48s ease 0.02s; }
+			.menu:target .nav-list li:nth-child(2)  { transition: opacity 0.45s ease 0.04s, transform 0.48s ease 0.03s; }
+			.menu:target .nav-list li:nth-child(3)  { transition: opacity 0.45s ease 0.05s, transform 0.48s ease 0.04s; }
+			.menu:target .nav-list li:nth-child(4)  { transition: opacity 0.45s ease 0.06s, transform 0.48s ease 0.05s; }
+			.menu:target .nav-list li:nth-child(5)  { transition: opacity 0.45s ease 0.07s, transform 0.48s ease 0.06s; }
+			.menu:target .nav-list li:nth-child(6)  { transition: opacity 0.45s ease 0.08s, transform 0.48s ease 0.07s; }
+			.menu:target .nav-list li:nth-child(7)  { transition: opacity 0.45s ease 0.09s, transform 0.48s ease 0.08s; }
+			.menu:target .nav-list li:nth-child(8)  { transition: opacity 0.45s ease 0.10s, transform 0.48s ease 0.09s; }
+			.menu:target .nav-list li:nth-child(9)  { transition: opacity 0.45s ease 0.11s, transform 0.48s ease 0.10s; }
+			.menu:target .nav-list li:nth-child(10) { transition: opacity 0.45s ease 0.12s, transform 0.48s ease 0.11s; }
 
-			nav ul li:first-child::before {
+			.nav-list li:first-child::before {
 				content: none;
 			}
 
-			nav ul li::before {
+			.nav-list li::before {
 				content: '';
 				display: block;
 				width: 100%;
@@ -278,7 +314,7 @@
 				background-color: #424245;
 			}
 
-			nav ul li a {
+			.nav-list li a {
 				display: flex;
 				align-items: center;
 				height: 2.5em;
@@ -288,6 +324,16 @@
 				color: #cfcfcf;
 				font-size: 1.0625em;
 				text-decoration: none;
+			}
+
+			.nav-list--quick-links li a {
+				height: 3.25em;
+
+				font-size: 0.85em;
+			}
+
+			.nav-list--quick-links li a:hover {
+				color: #2997ff;
 			}
 
 			/** ********** Search ********* */
@@ -300,7 +346,7 @@
 				transition: visibility var(--menu-slide-down-duration) ease;
 			}
 
-			#menu:target .search {
+			.menu:target .search {
 				visibility: visible;
 			}
 
@@ -320,7 +366,7 @@
 				transition: transform var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2), opacity var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2);
 			}
 
-			#menu:target .search::after {
+			.menu:target .search::after {
 				opacity: 1;
 				transform: none;
 				transition: all var(--menu-slide-down-duration) ease;
@@ -363,7 +409,7 @@
 				transition: transform var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2);
 			}
 
-			#menu:target .search-field-container::before {
+			.menu:target .search-field-container::before {
 				transform: none;
 				transition: transform var(--menu-slide-down-duration) ease;
 			}
@@ -378,7 +424,7 @@
 				transition: all calc(var(--menu-slide-down-duration) / 2) ease calc(var(--menu-slide-down-duration) / 2);
 			}
 
-			#menu:target .search__field {
+			.menu:target .search__field {
 				opacity: 1;
 				transform: none;
 				transition: all calc(var(--menu-slide-down-duration) / 2) ease;
@@ -488,6 +534,45 @@
 				display: none;
 			}
 
+			.menu--search:target .search__cancel {
+				display: flex;
+			}
+
+			/** ********** Search Result ********** */
+
+			.search-panel {
+				position: absolute;
+				top: calc(1em - 0.375em);
+				right: 2.5em;
+				left: 2.5em;
+
+				display: block;
+				margin: 0;
+				padding: 0;
+				visibility: hidden;
+
+				opacity: 0;
+				transform: translateY(-80px);
+				transition: all var(--menu-slide-down-duration) ease;
+			}
+
+			.search-panel figcaption {
+				display: block;
+				padding: 0.35em 0;
+
+				color: #86868b;
+				font-size: 0.75em;
+				font-weight: normal;
+				text-transform: uppercase;
+			}
+
+			.menu--search:target .search-panel {
+				visibility: visible;
+
+				opacity: 1;
+				transform: none;
+			}
+
 			/** ********** Main ********** */
 
 			main {
@@ -529,7 +614,13 @@
 		</style>
 	</head>
 	<body>
-		<header id="menu" class="menu">
+		<!--
+			@todo
+
+			* Search cancel button animation
+			* Tabbing focus search input?
+		-->
+		<header id="menu" class="menu js-menu">
 			<div class="menu__panel">
 				<div class="menu__action">
 					<div class="icon-menu-container" aria-hidden="true" hidden>
@@ -598,25 +689,38 @@
 
 					<input type="submit" value="Search" class="search__submit screen-reader-text screen-reader-text--focusable" />
 
-					<button class="search__cancel" hidden>
+					<button class="search__cancel js-search-cancel" hidden>
 						<span>Cancel</span>
 					</button>
 				</fieldset>
 			</form>
 
 			<nav>
-				<ul>
-					<li><a href="#">Store</a></li>
-					<li><a href="#">Mac</a></li>
-					<li><a href="#">iPad</a></li>
-					<li><a href="#">iPhone</a></li>
-					<li><a href="#">Watch</a></li>
-					<li><a href="#">AirPods</a></li>
-					<li><a href="#">TV & Home</a></li>
-					<li><a href="#">Only on Apple</a></li>
-					<li><a href="#">Accessories</a></li>
-					<li><a href="#">Support</a></li>
-				</ul>
+				<div class="nav-container" tabindex="-1">
+					<ul class="nav-list nav-list--main">
+						<li><a href="#">Store</a></li>
+						<li><a href="#">Mac</a></li>
+						<li><a href="#">iPad</a></li>
+						<li><a href="#">iPhone</a></li>
+						<li><a href="#">Watch</a></li>
+						<li><a href="#">AirPods</a></li>
+						<li><a href="#">TV & Home</a></li>
+						<li><a href="#">Only on Apple</a></li>
+						<li><a href="#">Accessories</a></li>
+						<li><a href="#">Support</a></li>
+					</ul>
+
+					<figure class="search-panel" hidden>
+						<figcaption>Quick Links</figcaption>
+						<ul class="nav-list nav-list--quick-links">
+							<li><a href="#">Visiting an Apple Store FAQ</a></li>
+							<li><a href="#">AirPods</a></li>
+							<li><a href="#">AirTag</a></li>
+							<li><a href="#">AppleCare+</a></li>
+							<li><a href="#">Gift Cards</a></li>
+						</ul>
+					</figure>
+				</div>
 			</nav>
 		</header>
 
@@ -634,9 +738,17 @@
 			(function () {
 
 				function main() {
+					initRoleButton();
+					initMenuButtonListeners();
+					initSearchListeners();
+				}
+
+				function initRoleButton() {
 					addRoleButton();
 					addRoleButtonListener();
+				}
 
+				function initMenuButtonListeners() {
 					document.querySelectorAll('.js-menu-button')[0].addEventListener('click', function () {
 						setTimeout(() => document.querySelectorAll('.js-menu-button')[1].focus(), 1);
 					});
@@ -647,6 +759,16 @@
 
 					document.querySelector('.js-search-reset').addEventListener('click', function () {
 						document.querySelector('.js-search-text').focus();
+					});
+				}
+
+				function initSearchListeners() {
+					document.querySelector('.js-search-text').addEventListener('focus', function () {
+						document.querySelector('.js-menu').classList.add('menu--search');
+					});
+
+					document.querySelector('.js-search-cancel').addEventListener('click', function () {
+						document.querySelector('.js-menu').classList.remove('menu--search');
 					});
 				}
 
