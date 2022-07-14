@@ -561,11 +561,27 @@
 			}
 
 			.search__cancel {
-				display: none;
+				width: 0;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				visibility: hidden;
+
+				opacity: 0;
+				transform: translateX(100%);
+
+				transition: all var(--menu-slide-down-duration) ease;
 			}
 
 			.menu--search:target .search__cancel {
-				display: flex;
+				width: auto;
+				margin-left: 0.625em;
+				padding: 0 0.5em;
+				overflow: visible;
+				visibility: visible;
+
+				opacity: 1;
+				transform: none;
 			}
 
 			/** ********** Search Result ********** */
