@@ -227,6 +227,9 @@
 				left: 0;
 				right: 0;
 
+				display: grid;
+				grid-template-columns: 1fr;
+				grid-template-rows: 1fr;
 				max-width: 640px;
 				max-height: 100%;
 				margin: 0 auto;
@@ -240,6 +243,10 @@
 				animation: nav-overflow var(--menu-slide-down-duration) ease forwards;
 			}
 
+			.menu--search:target .nav-container {
+				max-height: calc(100% + var(--header-height) - 1em);
+			}
+
 			/** Delay overflow-y until menu animation is done */
 			@keyframes nav-overflow {
 				0% { overflow-y: hidden; }
@@ -247,24 +254,43 @@
 				100% { overflow-y: auto; }
 			}
 
-			/*.menu--search:target .nav-container {
-				overflow-y: hidden;
-				animation: none;
-			}*/
+			.nav-container > * {
+				grid-column-start: 1;
+				grid-column-end: 2;
+				grid-row-start: 1;
+				grid-row-end: 2;
+			}
 
 			.nav-list {
 				display: block;
+				height: auto;
 				margin: 0;
 				padding: 0;
 
 				list-style: none;
-				transition: all var(--menu-slide-down-duration) ease;
+				transition: visibility var(--menu-slide-down-duration) ease, opacity var(--menu-slide-down-duration) ease
+
 			}
 
 			.menu--search:target .nav-list--main {
+				overflow: hidden;
 				visibility: hidden;
+
 				opacity: 0;
 				transform: translateY(40px);
+				animation: nav-height-out 0s ease forwards;
+			}
+
+			@keyframes nav-height-in {
+				0% { height: 0; }
+				99% { height: 0; }
+				100% { height: auto; }
+			}
+
+			@keyframes nav-height-out {
+				0% { height: auto; }
+				99% { height: auto; }
+				100% { height: 0; }
 			}
 
 			.nav-list li {
@@ -545,11 +571,6 @@
 			/** ********** Search Result ********** */
 
 			.search-panel {
-				position: absolute;
-				top: calc(1em - 0.375em);
-				right: 2.5em;
-				left: 2.5em;
-
 				display: block;
 				margin: 0;
 				padding: 0;
@@ -562,7 +583,7 @@
 
 			.search-panel figcaption {
 				display: block;
-				padding: 0.35em 0;
+				padding: calc(0.35em + 0.375em) 0 0.35em;
 
 				color: #86868b;
 				font-size: 0.75em;
@@ -618,13 +639,6 @@
 		</style>
 	</head>
 	<body>
-		<!--
-			@todo
-
-			* Search cancel button animation
-			* Tabbing focus search input?
-			* Scrollbar and height in Quick Links because of position absolute
-		-->
 		<header id="menu" class="menu js-menu">
 			<div class="menu__panel">
 				<div class="menu__action">
@@ -654,7 +668,7 @@
 				</div>
 			</div>
 
-			<form class="search" novalidate>
+			<form class="search js-search" novalidate>
 				<fieldset>
 					<div class="search-field-container">
 						<p class="search__field js-search-field">
@@ -742,10 +756,19 @@
 			 */
 			(function () {
 
+				const searchText = document.querySelector('.js-search-text');
+				const searchSubmit = document.querySelector('.js-search-submit');
+				const searchField = document.querySelector('.js-search-field');
+
 				function main() {
 					initRoleButton(document.querySelectorAll('.js-menu-button'));
 					initMenuButton();
 					initSearch();
+
+					document.querySelector('.js-search').addEventListener('submit', e => {
+						e.preventDefault();
+						alert('This is a demo, search not implemented.');
+					});
 				}
 
 				function initRoleButton(buttons) {
@@ -769,45 +792,33 @@
 					});
 
 					document.querySelectorAll('.js-menu-button')[1].addEventListener('click', function (e) {
+						resetSearch();
 						setTimeout(() => document.querySelectorAll('.js-menu-button')[0].focus(), 1);
 					});
 
 					document.querySelector('.js-search-reset').addEventListener('click', function () {
-						document.querySelector('.js-search-text').focus();
+						searchText.focus();
 					});
 				}
 
 				function initSearch() {
-					const searchText = document.querySelector('.js-search-text');
-					const searchSubmit = document.querySelector('.js-search-submit');
-					const searchField = document.querySelector('.js-search-field');
+					deactivateSearchField();
 
 					searchField.setAttribute('title', 'Search, press enter or space to focus to search input.');
 
-					const searchFieldDeactivation = function () {
-						searchText.setAttribute('tabindex', '-1');
-						searchSubmit.setAttribute('tabindex', '-1');
-						searchField.setAttribute('tabindex', '0');
-					};
-
-					const searchFieldActivation = function () {
-						searchText.setAttribute('tabindex', '0');
-						searchSubmit.setAttribute('tabindex', '0');
-						searchField.setAttribute('tabindex', '-1');
-					};
-
-					searchFieldDeactivation();
-
 					searchField.addEventListener('click', function () {
-						searchFieldActivation();
+						activateSearchField();
 						searchText.focus();
 					});
 
 					searchField.addEventListener('keydown', function (e) {
+						if (e.target.classList.contains('js-search-reset')) return;
+						if (e.target.classList.contains('js-search-text')) return;
+
 						const keyCode = e.which || e.keyCode;
 						if (keyCode === 13 || keyCode === 32) {
 							e.preventDefault();
-							searchFieldActivation();
+							activateSearchField();
 							searchText.focus();
 						}
 					});
@@ -818,10 +829,26 @@
 
 					document.querySelector('.js-search-cancel').addEventListener('click', function (e) {
 						e.preventDefault();
-						searchText.value = '';
-						document.querySelector('.js-menu').classList.remove('menu--search');
-						searchFieldDeactivation();
+						resetSearch();
 					});
+				}
+
+				function activateSearchField() {
+					searchText.setAttribute('tabindex', '0');
+					searchSubmit.setAttribute('tabindex', '0');
+					searchField.setAttribute('tabindex', '-1');
+				}
+
+				function deactivateSearchField() {
+					searchText.setAttribute('tabindex', '-1');
+					searchSubmit.setAttribute('tabindex', '-1');
+					searchField.setAttribute('tabindex', '0');
+				}
+
+				function resetSearch() {
+					searchText.value = '';
+					document.querySelector('.js-menu').classList.remove('menu--search');
+					deactivateSearchField();
 				}
 
 				main();				
