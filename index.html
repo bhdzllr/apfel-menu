@@ -247,10 +247,10 @@
 				100% { overflow-y: auto; }
 			}
 
-			.menu--search:target .nav-container {
+			/*.menu--search:target .nav-container {
 				overflow-y: hidden;
 				animation: none;
-			}
+			}*/
 
 			.nav-list {
 				display: block;
@@ -623,6 +623,7 @@
 
 			* Search cancel button animation
 			* Tabbing focus search input?
+			* Scrollbar and height in Quick Links because of position absolute
 		-->
 		<header id="menu" class="menu js-menu">
 			<div class="menu__panel">
@@ -648,7 +649,7 @@
 				<div class="menu__logo">
 					<a href="/" class="menu__log">
 						<span aria-hidden="true">&clubs;</span> <!-- &#9787; -->
-						<span class="screen-reader-text">Apfel</span>
+						<span class="screen-reader-text" lang="de">Apfel</span>
 					</a>
 				</div>
 			</div>
@@ -656,7 +657,7 @@
 			<form class="search" novalidate>
 				<fieldset>
 					<div class="search-field-container">
-						<p class="search__field">
+						<p class="search__field js-search-field">
 							<label for="search-text">
 								<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-search" aria-hidden="true">
 									<g fill="transparent" stroke="#86868b" stroke-width="1.25" stroke-linecap="round"> 
@@ -691,7 +692,7 @@
 						</p>
 					</div>
 
-					<input type="submit" value="Search" class="search__submit screen-reader-text screen-reader-text--focusable" />
+					<input type="submit" value="Search" class="search__submit screen-reader-text screen-reader-text--focusable js-search-submit" />
 
 					<button class="search__cancel js-search-cancel" hidden>
 						<span>Cancel</span>
@@ -742,17 +743,27 @@
 			(function () {
 
 				function main() {
-					initRoleButton();
-					initMenuButtonListeners();
-					initSearchListeners();
+					initRoleButton(document.querySelectorAll('.js-menu-button'));
+					initMenuButton();
+					initSearch();
 				}
 
-				function initRoleButton() {
-					addRoleButton();
-					addRoleButtonListener();
+				function initRoleButton(buttons) {
+					for (let i = 0; i < buttons.length; i++) {
+						buttons[i].setAttribute('role', 'button');
+
+						buttons[i].addEventListener('keydown', function (e) {
+							const keyCode = e.which || e.keyCode;
+
+							if (keyCode === 13 || keyCode === 32) {
+								e.preventDefault();
+								buttons[i].click();
+							}
+						});
+					}
 				}
 
-				function initMenuButtonListeners() {
+				function initMenuButton() {
 					document.querySelectorAll('.js-menu-button')[0].addEventListener('click', function (e) {
 						setTimeout(() => document.querySelectorAll('.js-menu-button')[1].focus(), 1);
 					});
@@ -766,41 +777,51 @@
 					});
 				}
 
-				function initSearchListeners() {
-					document.querySelector('.js-search-text').addEventListener('focus', function () {
+				function initSearch() {
+					const searchText = document.querySelector('.js-search-text');
+					const searchSubmit = document.querySelector('.js-search-submit');
+					const searchField = document.querySelector('.js-search-field');
+
+					searchField.setAttribute('title', 'Search, press enter or space to focus to search input.');
+
+					const searchFieldDeactivation = function () {
+						searchText.setAttribute('tabindex', '-1');
+						searchSubmit.setAttribute('tabindex', '-1');
+						searchField.setAttribute('tabindex', '0');
+					};
+
+					const searchFieldActivation = function () {
+						searchText.setAttribute('tabindex', '0');
+						searchSubmit.setAttribute('tabindex', '0');
+						searchField.setAttribute('tabindex', '-1');
+					};
+
+					searchFieldDeactivation();
+
+					searchField.addEventListener('click', function () {
+						searchFieldActivation();
+						searchText.focus();
+					});
+
+					searchField.addEventListener('keydown', function (e) {
+						const keyCode = e.which || e.keyCode;
+						if (keyCode === 13 || keyCode === 32) {
+							e.preventDefault();
+							searchFieldActivation();
+							searchText.focus();
+						}
+					});
+
+					searchText.addEventListener('focus', function () {
 						document.querySelector('.js-menu').classList.add('menu--search');
 					});
 
 					document.querySelector('.js-search-cancel').addEventListener('click', function (e) {
 						e.preventDefault();
-						document.querySelector('.js-search-text').value = '';
+						searchText.value = '';
 						document.querySelector('.js-menu').classList.remove('menu--search');
+						searchFieldDeactivation();
 					});
-				}
-
-				function addRoleButton() {
-					const buttons = document.querySelectorAll('.js-menu-button');
-
-					for (let i = 0; i < buttons.length; i++) {
-						buttons[i].setAttribute('role', 'button');
-					}
-				}
-
-				function addRoleButtonListener(exceptions = []) {
-					const buttons = document.querySelectorAll('[role="button"]');
-
-					for (let i = 0; i < buttons.length; i++) {
-						if (exceptions.indexOf(buttons[i].nodeName.toLowerCase()) > -1) continue;
-
-						buttons[i].addEventListener('keydown', function (e) {
-							const keyCode = e.which || e.keyCode;
-
-							if (keyCode === 13 || keyCode === 32) {
-								e.preventDefault();
-								buttons[i].click();
-							}
-						});
-					}
 				}
 
 				main();				
