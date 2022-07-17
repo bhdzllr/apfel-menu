@@ -18,6 +18,7 @@
 				--header-height: 48px;
 				--icon-width-height: 48px;
 				--menu-slide-down-duration: 0.5s;
+				--nav-padding: 0.375em 2.5em 0.5em;
 			}
 
 			:focus {
@@ -31,7 +32,7 @@
 				margin: 0;
 				padding: 0;
 
-				background: #ffffff;
+				background: #eeeeee;
 				
 				color: #222222;
 				font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -46,28 +47,53 @@
 
 			/** ********** Menu ********** */
 
-			.menu {
+			header {
 				position: fixed;
 				top: 0;
+				right: 0;
+				left: 0;
 
+				display: flex;
+				justify-content: center;
+				
+				background-color: rgba(0, 0, 0, 0.9);
+				transition: background-color calc(var(--menu-slide-down-duration) / 2) ease calc(var(--menu-slide-down-duration) / 2)
+			}
+
+			#menu:target {
+				background-color: rgba(0, 0, 0, 1);
+				transition: background-color calc(var(--menu-slide-down-duration) / 4) ease;
+			}
+
+			.menu {
+				display: grid;
+				grid-template-rows: auto auto 1fr;
 				width: 100%;
 				height: var(--header-height);
 				overflow: hidden;
 
-				background-color: rgba(0, 0, 0, 0.9);
-				transition: height var(--menu-slide-down-duration) ease-in-out, background-color calc(var(--menu-slide-down-duration) / 2) ease calc(var(--menu-slide-down-duration) / 2);
+				transition: height var(--menu-slide-down-duration) ease-in-out;
 
 				color: #cfcfcf;
 			}
 
-			.menu:target {
-				height: calc(100vh + var(--header-height));
-
-				background-color: rgba(0, 0, 0, 1);
-				transition: height var(--menu-slide-down-duration) ease-in-out, background-color calc(var(--menu-slide-down-duration) / 4) ease, transform var(--menu-slide-down-duration) ease;
+			@media (min-width: 834px) {
+				.menu {
+					grid-template-rows: var(--header-height) 240px;
+					grid-template-columns: var(--header-height) 1fr var(--header-height);
+					max-width: 980px;
+					margin: 0 auto;
+					overflow: visible;
+				}
 			}
 
-			.menu--search:target {
+			#menu:target .menu {
+				height: calc(100vh + var(--header-height));
+
+				transition: height var(--menu-slide-down-duration) ease-in-out, transform var(--menu-slide-down-duration) ease;
+			}
+
+			#menu:target .menu--search {
 				transform: translateY(calc(var(--header-height) * -1 + 1em));
 				transition: transform var(--menu-slide-down-duration) ease;
 			}
@@ -86,6 +112,7 @@
 
 				display: flex;
 				align-items: center;
+				justify-content: center;
 			}
 
 			.menu__action {
@@ -94,6 +121,12 @@
 
 			.menu__action:hover svg line {
 				stroke: #ffffff;
+			}
+
+			@media (min-width: 834px) {
+				.menu__action {
+					display: none;
+				}
 			}
 
 			/** ********** Menu buttons ********** */
@@ -107,12 +140,17 @@
 				height: var(--icon-width-height);
 			}
 
+			.menu__opener:focus,
+			.menu__closer:focus {
+				outline-offset: -4px;
+			}
+
 			.menu__opener {
 				display: block;
 				visibility: visible;
 			}
 
-			.menu:target .menu__opener {
+			#menu:target .menu .menu__opener {
 				display: none;
 				visibility: hidden;
 			}
@@ -122,7 +160,7 @@
 				visibility: hidden;
 			}
 
-			.menu:target .menu__closer {
+			#menu:target .menu .menu__closer {
 				display: block;
 				visibility: visible;
 			}
@@ -168,22 +206,22 @@
 				transition: transform 0.175s ease;
 			}
 
-			.menu:target .icon-menu g:first-child {
+			#menu:target .menu .icon-menu g:first-child {
 				transform: translate(0, 3.5px);
 				transition: transform 0.175s ease;
 			}
 
-			.menu:target .icon-menu g:first-child line {
+			#menu:target .menu .icon-menu g:first-child line {
 				transform: rotate(45deg);
 				transition: transform 0.175s ease 0.175s;
 			}
 
-			.menu:target .icon-menu g:last-child {
+			#menu:target .menu .icon-menu g:last-child {
 				transform: translate(0, -3.5px);
 				transition: transform 0.175s ease;
 			}
 
-			.menu:target .icon-menu g:last-child line {
+			#menu:target .menu .icon-menu g:last-child line {
 				transform: rotate(-45deg);
 				transition: transform 0.175s ease 0.175s;
 			}
@@ -201,50 +239,92 @@
 				text-align: center;
 			}
 
-			.menu--search:target .menu__logo {
+			@media (min-width: 834px) {
+				.menu__logo {
+					width: 100%;
+					height: 100%;
+					margin-right: 0;
+				}
+
+				.menu__logo a {
+					display: flex;
+					width: 100%;
+					height: 100%;
+					align-items: center;
+					justify-content: center;
+				}
+
+				.menu__logo a:focus {
+					outline-offset: -4px;
+				}
+			}
+
+			#menu:target .menu--search .menu__logo {
 				transform: scale(0.5);
 				transition: transform 0.2s ease calc(var(--menu-slide-down-duration) / 2);
 			}
 
-			/** ********** Navigation ********** */
+			/** ********** Navigation and Search Panel ********** */
 
-			nav {
-				position: relative;
-
-				height: calc(100% - var(--header-height) - 6.5em);
+			.nav,
+			.search-panel {
+				grid-row-start: 3;
+				grid-row-end: 4;
+				grid-column-start: 1;
+				grid-column-end: 2;
+				width: 100%;
+				max-width: 640px;
+				height: calc(100% - var(--header-height));
+				margin: 0 auto;
+				padding: var(--nav-padding);
+				box-sizing: border-box;
+				overflow-y: hidden;
 				visibility: hidden;
 
 				transition: visibility var(--menu-slide-down-duration) ease;
 			}
 
-			.menu:target nav {
-				visibility: visible;
-			}
-
-			.nav-container {
-				position: absolute;
-				top: 0;
-				left: 0;
-				right: 0;
-
-				display: grid;
-				grid-template-columns: 1fr;
-				grid-template-rows: 1fr;
-				max-width: 640px;
-				max-height: 100%;
-				margin: 0 auto;
-				padding: 0.375em 2.5em 0.5em;
-				overflow-y: hidden;
-				box-sizing: border-box;
-			}
-
-			.menu:target .nav-container {
+			#menu:target .menu .nav,
+			#menu:target .menu .search-panel {
 				overflow-y: auto;
+				visibility: visible;
+
 				animation: nav-overflow var(--menu-slide-down-duration) ease forwards;
 			}
 
-			.menu--search:target .nav-container {
-				max-height: calc(100% + var(--header-height) - 1em);
+			@media (min-width: 834px) {
+				.nav {
+					display: flex;
+					align-items: center;
+					grid-row-start: 1;
+					grid-row-end: 2;
+					grid-column-start: 2;
+					grid-column-end: 3;
+					max-width: none;
+					height: auto;
+					padding: 0;
+					visibility: visible
+				}
+
+				.search-panel {
+					grid-row-start: 2;
+					grid-row-end: 3;
+					grid-column-start: 2;
+					grid-column-end: 3;
+					visibility: visible;
+				}
+			}
+
+			#menu:target .menu .nav {
+				transition: all var(--menu-slide-down-duration) ease;
+			}
+
+			#menu:target .menu--search .nav {
+				visibility: hidden;
+
+				opacity: 0;
+				transform: translateY(40px);
+				transition: all var(--menu-slide-down-duration) ease;
 			}
 
 			/** Delay overflow-y until menu animation is done */
@@ -254,13 +334,6 @@
 				100% { overflow-y: auto; }
 			}
 
-			.nav-container > * {
-				grid-column-start: 1;
-				grid-column-end: 2;
-				grid-row-start: 1;
-				grid-row-end: 2;
-			}
-
 			.nav-list {
 				display: block;
 				height: auto;
@@ -268,29 +341,16 @@
 				padding: 0;
 
 				list-style: none;
-				transition: visibility var(--menu-slide-down-duration) ease, opacity var(--menu-slide-down-duration) ease
-
 			}
 
-			.menu--search:target .nav-list--main {
-				overflow: hidden;
-				visibility: hidden;
-
-				opacity: 0;
-				transform: translateY(40px);
-				animation: nav-height-out 0s ease forwards;
-			}
-
-			@keyframes nav-height-in {
-				0% { height: 0; }
-				99% { height: 0; }
-				100% { height: auto; }
-			}
-
-			@keyframes nav-height-out {
-				0% { height: auto; }
-				99% { height: auto; }
-				100% { height: 0; }
+			@media (min-width: 834px) {
+				.nav-list {
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					width: 100%;
+					height: 100%;
+				}
 			}
 
 			.nav-list li {
@@ -300,9 +360,18 @@
 				transform: translateY(-2.5em);
 			}
 
-			.menu:target .nav-list li {
+			#menu:target .menu .nav-list li {
 				opacity: 1;
 				transform: none;
+			}
+
+			@media (min-width: 834px) {
+				.nav-list li {
+					height: 100%;
+
+					opacity: 1;
+					transform: none;
+				}
 			}
 
 			.nav-list li:nth-child(1)  { transition: opacity 0.45s ease 0.13s, transform 0.48s ease 0.12s; }
@@ -316,16 +385,16 @@
 			.nav-list li:nth-child(9)  { transition: opacity 0.45s ease 0.05s, transform 0.48s ease 0.04s; }
 			.nav-list li:nth-child(10) { transition: opacity 0.45s ease 0.04s, transform 0.48s ease 0.03s; }
 
-			.menu:target .nav-list li:nth-child(1)  { transition: opacity 0.45s ease 0.03s, transform 0.48s ease 0.02s; }
-			.menu:target .nav-list li:nth-child(2)  { transition: opacity 0.45s ease 0.04s, transform 0.48s ease 0.03s; }
-			.menu:target .nav-list li:nth-child(3)  { transition: opacity 0.45s ease 0.05s, transform 0.48s ease 0.04s; }
-			.menu:target .nav-list li:nth-child(4)  { transition: opacity 0.45s ease 0.06s, transform 0.48s ease 0.05s; }
-			.menu:target .nav-list li:nth-child(5)  { transition: opacity 0.45s ease 0.07s, transform 0.48s ease 0.06s; }
-			.menu:target .nav-list li:nth-child(6)  { transition: opacity 0.45s ease 0.08s, transform 0.48s ease 0.07s; }
-			.menu:target .nav-list li:nth-child(7)  { transition: opacity 0.45s ease 0.09s, transform 0.48s ease 0.08s; }
-			.menu:target .nav-list li:nth-child(8)  { transition: opacity 0.45s ease 0.10s, transform 0.48s ease 0.09s; }
-			.menu:target .nav-list li:nth-child(9)  { transition: opacity 0.45s ease 0.11s, transform 0.48s ease 0.10s; }
-			.menu:target .nav-list li:nth-child(10) { transition: opacity 0.45s ease 0.12s, transform 0.48s ease 0.11s; }
+			#menu:target .menu .nav-list li:nth-child(1)  { transition: opacity 0.45s ease 0.03s, transform 0.48s ease 0.02s; }
+			#menu:target .menu .nav-list li:nth-child(2)  { transition: opacity 0.45s ease 0.04s, transform 0.48s ease 0.03s; }
+			#menu:target .menu .nav-list li:nth-child(3)  { transition: opacity 0.45s ease 0.05s, transform 0.48s ease 0.04s; }
+			#menu:target .menu .nav-list li:nth-child(4)  { transition: opacity 0.45s ease 0.06s, transform 0.48s ease 0.05s; }
+			#menu:target .menu .nav-list li:nth-child(5)  { transition: opacity 0.45s ease 0.07s, transform 0.48s ease 0.06s; }
+			#menu:target .menu .nav-list li:nth-child(6)  { transition: opacity 0.45s ease 0.08s, transform 0.48s ease 0.07s; }
+			#menu:target .menu .nav-list li:nth-child(7)  { transition: opacity 0.45s ease 0.09s, transform 0.48s ease 0.08s; }
+			#menu:target .menu .nav-list li:nth-child(8)  { transition: opacity 0.45s ease 0.10s, transform 0.48s ease 0.09s; }
+			#menu:target .menu .nav-list li:nth-child(9)  { transition: opacity 0.45s ease 0.11s, transform 0.48s ease 0.10s; }
+			#menu:target .menu .nav-list li:nth-child(10) { transition: opacity 0.45s ease 0.12s, transform 0.48s ease 0.11s; }
 
 			.nav-list li:first-child::before {
 				content: none;
@@ -340,6 +409,12 @@
 				background-color: #424245;
 			}
 
+			@media (min-width: 834px) {
+				.nav-list li::before {
+					content: none;
+				}
+			}
+
 			.nav-list li a {
 				display: flex;
 				align-items: center;
@@ -352,7 +427,20 @@
 				text-decoration: none;
 			}
 
-			.nav-list--quick-links li a {
+			@media (min-width: 834px) {
+				.nav-list li a {
+					height: 100%;
+					padding: 0 0.65em;
+
+					font-size: 0.8em;
+				}
+
+				.nav-list li a:focus {
+					outline-offset: -4px;
+				}
+			}
+
+			.nav-list--quicklinks li a {
 				height: 3.25em;
 
 				transition: none;
@@ -360,7 +448,7 @@
 				font-size: 0.85em;
 			}
 
-			.nav-list--quick-links li a:hover {
+			.nav-list--quicklinks li a:hover {
 				color: #2997ff;
 			}
 
@@ -374,7 +462,7 @@
 				transition: visibility var(--menu-slide-down-duration) ease;
 			}
 
-			.menu:target .search {
+			#menu:target .menu .search {
 				visibility: visible;
 			}
 
@@ -394,7 +482,7 @@
 				transition: transform var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2), opacity var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2);
 			}
 
-			.menu:target .search::after {
+			#menu:target .menu .search::after {
 				opacity: 1;
 				transform: none;
 				transition: all var(--menu-slide-down-duration) ease;
@@ -437,7 +525,7 @@
 				transition: transform var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2);
 			}
 
-			.menu:target .search-field-container::before {
+			#menu:target .menu .search-field-container::before {
 				transform: none;
 				transition: transform var(--menu-slide-down-duration) ease;
 			}
@@ -452,10 +540,11 @@
 				transition: all calc(var(--menu-slide-down-duration) / 2) ease calc(var(--menu-slide-down-duration) / 2);
 			}
 
-			.menu:target .search__field {
+			#menu:target .menu .search__field {
 				opacity: 1;
 				transform: none;
-				transition: all calc(var(--menu-slide-down-duration) / 2) ease;
+				transition: opacity calc(var(--menu-slide-down-duration) / 2) ease,
+					transform calc(var(--menu-slide-down-duration) / 2) ease;
 			}
 
 			.search__field label {
@@ -490,6 +579,7 @@
 				border: none;
 				border-radius: 0.5em;
 				outline: none;
+				-webkit-appearance: none;
 
 				color: #ffffff;
 				font-size: 1.0625em;;
@@ -570,10 +660,12 @@
 				opacity: 0;
 				transform: translateX(100%);
 
-				transition: all var(--menu-slide-down-duration) ease;
+				transition: visibility var(--menu-slide-down-duration) ease,
+					opacity var(--menu-slide-down-duration) ease,
+					transform var(--menu-slide-down-duration) ease;
 			}
 
-			.menu--search:target .search__cancel {
+			#menu:target .menu--search .search__cancel {
 				width: auto; /* Knowing the width would be nicer animation, maybe something to add via JS */
 				margin-left: 0.625em;
 				padding: 0 0.5em;
@@ -586,7 +678,7 @@
 
 			/** ********** Search Result ********** */
 
-			.search-panel {
+			.quicklinks {
 				display: block;
 				margin: 0;
 				padding: 0;
@@ -597,7 +689,17 @@
 				transition: all var(--menu-slide-down-duration) ease;
 			}
 
-			.search-panel figcaption {
+			@media (min-width: 834px) {
+				.quicklinks {
+					visibility: visible;
+
+					background-color: #ffffff;
+					opacity: 1;
+					transform: none;
+				}
+			}
+
+			.quicklinks figcaption {
 				display: block;
 				padding: calc(0.35em + 0.375em) 0 0.35em;
 
@@ -607,7 +709,7 @@
 				text-transform: uppercase;
 			}
 
-			.menu--search:target .search-panel {
+			#menu:target .menu--search .quicklinks {
 				visibility: visible;
 
 				opacity: 1;
@@ -655,83 +757,99 @@
 		</style>
 	</head>
 	<body>
-		<header id="menu" class="menu js-menu">
-			<div class="menu__panel">
-				<div class="menu__action">
-					<div class="icon-menu-container" aria-hidden="true" hidden>
-						<svg viewBox="0 0 30 30" width="30px" height="30px" class="icon-menu" aria-hidden="true">
-							<g>
-								<line x1="8" y1="11.5" x2="23" y2="11.5" stroke="#cfcfcf" stroke-linecap="round" />
-							</g>
-							<g>
-								<line x1="8" y1="18.5" x2="23" y2="18.5" stroke="#cfcfcf" stroke-linecap="round" />
-							</g>
-						</svg>
-					</div>
-					<a href="#menu" class="menu__opener js-menu-button" hidden>
-						<span class="screen-reader-text">Menu</span>
-					</a>
-					<a href="#" class="menu__closer js-menu-button" hidden>
-						<span class="screen-reader-text">Close</span>
-					</a>
-				</div>
-
-				<div class="menu__logo">
-					<a href="/" class="menu__log">
-						<span aria-hidden="true">&clubs;</span> <!-- &#9787; -->
-						<span class="screen-reader-text" lang="de">Apfel</span>
-					</a>
-				</div>
-			</div>
-
-			<form class="search js-search" novalidate>
-				<fieldset>
-					<div class="search-field-container">
-						<p class="search__field js-search-field">
-							<label for="search-text">
-								<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-search" aria-hidden="true">
-									<g fill="transparent" stroke="#86868b" stroke-width="1.25" stroke-linecap="round"> 
-										<circle cx="4" cy="4" r="3" />
-										<line x1="6" y1="6" x2="9" y2="9" />
-									</g>
-								</svg>
-								<span class="screen-reader-text">Search Text</span>
-							</label>
-							<input
-								type="search"
-								name="search-text"
-								id="search-text"
-								placeholder="Search apple.com"
-								class="js-search-text"
-								autocomplete="off"
-								autocorrect="off"
-								autocapitalize="none"
-								spellcheck="false"
-								required
-							/>
-
-							<button type="reset" class="js-search-reset">
-								<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-reset" aria-hidden="true">
-									<g stroke="#1d1d1f" stroke-width="1.25" stroke-linecap="round">
-										<line x1="0" y1="0" x2="10" y2="10" />
-										<line x1="0" y1="10" x2="10" y2="0" />
-									</g>
-								</svg>
-								<span class="screen-reader-text">Reset</span>
-							</button>
-						</p>
+		<!--
+			* Cancel chromium
+		-->
+		<header id="menu">
+			<div class="menu js-menu">
+				<div class="menu__panel">
+					<div class="menu__action">
+						<div class="icon-menu-container" aria-hidden="true" hidden>
+							<svg viewBox="0 0 30 30" width="30px" height="30px" class="icon-menu" aria-hidden="true">
+								<g>
+									<line x1="8" y1="11.5" x2="23" y2="11.5" stroke="#cfcfcf" stroke-linecap="round" />
+								</g>
+								<g>
+									<line x1="8" y1="18.5" x2="23" y2="18.5" stroke="#cfcfcf" stroke-linecap="round" />
+								</g>
+							</svg>
+						</div>
+						<a href="#menu" class="menu__opener js-menu-button" hidden>
+							<span class="screen-reader-text">Menu</span>
+						</a>
+						<a href="#" class="menu__closer js-menu-button" hidden>
+							<span class="screen-reader-text">Close</span>
+						</a>
 					</div>
 
-					<input type="submit" value="Search" class="search__submit screen-reader-text screen-reader-text--focusable js-search-submit" />
+					<div class="menu__logo">
+						<a href="/">
+							<span aria-hidden="true">&clubs;</span> <!-- &#9787; -->
+							<span class="screen-reader-text" lang="de">Apfel</span>
+						</a>
+					</div>
+				</div>
 
-					<button class="search__cancel js-search-cancel" hidden>
-						<span>Cancel</span>
-					</button>
-				</fieldset>
-			</form>
+				<form class="search js-search" novalidate>
+					<fieldset>
+						<div class="search-field-container">
+							<p class="search__field js-search-field">
+								<label for="search-text">
+									<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-search" aria-hidden="true">
+										<g fill="transparent" stroke="#86868b" stroke-width="1.25" stroke-linecap="round"> 
+											<circle cx="4" cy="4" r="3" />
+											<line x1="6" y1="6" x2="9" y2="9" />
+										</g>
+									</svg>
+									<span class="screen-reader-text">Search Text</span>
+								</label>
+								<input
+									type="search"
+									name="search-text"
+									id="search-text"
+									placeholder="Search apple.com"
+									class="js-search-text"
+									autocomplete="off"
+									autocorrect="off"
+									autocapitalize="none"
+									spellcheck="false"
+									required
+								/>
 
-			<nav>
-				<div class="nav-container" tabindex="-1">
+								<button type="reset" class="js-search-reset">
+									<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-reset" aria-hidden="true">
+										<g stroke="#1d1d1f" stroke-width="1.25" stroke-linecap="round">
+											<line x1="0" y1="0" x2="10" y2="10" />
+											<line x1="0" y1="10" x2="10" y2="0" />
+										</g>
+									</svg>
+									<span class="screen-reader-text">Reset</span>
+								</button>
+							</p>
+						</div>
+
+						<input type="submit" value="Search" class="search__submit screen-reader-text screen-reader-text--focusable js-search-submit" />
+
+						<button class="search__cancel js-search-cancel" hidden>
+							<span>Cancel</span>
+						</button>
+					</fieldset>
+				</form>
+
+				<div class="search-panel">
+					<figure id="quicklinks" class="quicklinks" hidden>
+						<figcaption>Quick Links</figcaption>
+						<ul class="nav-list nav-list--quicklinks">
+							<li><a href="#">Visiting an Apple Store FAQ</a></li>
+							<li><a href="#">AirPods</a></li>
+							<li><a href="#">AirTag</a></li>
+							<li><a href="#">AppleCare+</a></li>
+							<li><a href="#">Gift Cards</a></li>
+						</ul>
+					</figure>
+				</div>
+
+				<nav class="nav">
 					<ul class="nav-list nav-list--main">
 						<li><a href="#">Store</a></li>
 						<li><a href="#">Mac</a></li>
@@ -744,19 +862,8 @@
 						<li><a href="#">Accessories</a></li>
 						<li><a href="#">Support</a></li>
 					</ul>
-
-					<figure class="search-panel" hidden>
-						<figcaption>Quick Links</figcaption>
-						<ul class="nav-list nav-list--quick-links">
-							<li><a href="#">Visiting an Apple Store FAQ</a></li>
-							<li><a href="#">AirPods</a></li>
-							<li><a href="#">AirTag</a></li>
-							<li><a href="#">AppleCare+</a></li>
-							<li><a href="#">Gift Cards</a></li>
-						</ul>
-					</figure>
-				</div>
-			</nav>
+				</nav>
+			</div>
 		</header>
 
 		<main role="main">
@@ -821,6 +928,7 @@
 					deactivateSearchField();
 
 					searchField.setAttribute('title', 'Search, press enter or space to focus to search input.');
+					// searchField.setAttribute('role', 'button');
 
 					searchField.addEventListener('click', function () {
 						activateSearchField();
@@ -842,6 +950,7 @@
 					searchText.addEventListener('focus', function () {
 						document.querySelector('.js-menu').classList.add('menu--search');
 					});
+					searchText.setAttribute('aria-owns', 'quicklinks'); // More aria attributes needed in case of autocomplete
 
 					document.querySelector('.js-search-cancel').addEventListener('click', function (e) {
 						e.preventDefault();
@@ -850,12 +959,16 @@
 				}
 
 				function activateSearchField() {
+					searchText.setAttribute('aria-expanded', 'true');
+
 					searchText.setAttribute('tabindex', '0');
 					searchSubmit.setAttribute('tabindex', '0');
 					searchField.setAttribute('tabindex', '-1');
 				}
 
 				function deactivateSearchField() {
+					searchText.setAttribute('aria-expanded', 'false');
+
 					searchText.setAttribute('tabindex', '-1');
 					searchSubmit.setAttribute('tabindex', '-1');
 					searchField.setAttribute('tabindex', '0');
