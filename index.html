@@ -927,8 +927,7 @@
 				function initSearch() {
 					deactivateSearchField();
 
-					searchField.setAttribute('title', 'Search, press enter or space to focus to search input.');
-					// searchField.setAttribute('role', 'button');
+					searchField.setAttribute('title', 'Search; Press enter or space to jump to search input.');
 
 					searchField.addEventListener('click', function () {
 						activateSearchField();
@@ -964,6 +963,7 @@
 					searchText.setAttribute('tabindex', '0');
 					searchSubmit.setAttribute('tabindex', '0');
 					searchField.setAttribute('tabindex', '-1');
+					searchField.removeAttribute('role');
 				}
 
 				function deactivateSearchField() {
@@ -972,6 +972,7 @@
 					searchText.setAttribute('tabindex', '-1');
 					searchSubmit.setAttribute('tabindex', '-1');
 					searchField.setAttribute('tabindex', '0');
+					searchField.setAttribute('role', 'button');
 				}
 
 				function resetSearch() {
