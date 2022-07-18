@@ -81,8 +81,9 @@
 				.menu {
 					grid-template-rows: var(--header-height) 240px;
 					grid-template-columns: var(--header-height) 1fr var(--header-height);
-					max-width: 980px;
-					margin: 0 auto;
+					max-width: 1000px;
+					margin: 0 -0.5em;
+					padding: 0 1.375em;
 					overflow: visible;
 				}
 			}
@@ -91,6 +92,12 @@
 				height: calc(100vh + var(--header-height));
 
 				transition: height var(--menu-slide-down-duration) ease-in-out, transform var(--menu-slide-down-duration) ease;
+			}
+
+			@media (min-width: 834px) {
+				#menu:target .menu {
+					height: var(--header-height);
+				}
 			}
 
 			#menu:target .menu--search {
@@ -241,9 +248,11 @@
 
 			@media (min-width: 834px) {
 				.menu__logo {
-					width: 100%;
+					flex-grow: 0;
+					width: auto;
 					height: 100%;
 					margin-right: 0;
+					padding: 0 0.3em;
 				}
 
 				.menu__logo a {
@@ -346,7 +355,7 @@
 			@media (min-width: 834px) {
 				.nav-list {
 					display: flex;
-					justify-content: space-between;
+					justify-content: space-around;
 					align-items: center;
 					width: 100%;
 					height: 100%;
@@ -432,7 +441,7 @@
 					height: 100%;
 					padding: 0 0.65em;
 
-					font-size: 0.8em;
+					font-size: 0.75em;
 				}
 
 				.nav-list li a:focus {
@@ -488,6 +497,42 @@
 				transition: all var(--menu-slide-down-duration) ease;
 			}
 
+			@media (min-width: 834px) {
+				.search {
+					visibility: visible;
+				}
+
+				.search::after {
+					content: none;
+				}
+			}
+
+			.search__opener {
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+
+				display: block;
+			}
+
+			@media (min-width: 834px) {
+				.search__opener {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+				}
+
+				.search__opener {
+					outline-offset: -4px;
+				}
+
+				.search__opener:hover svg g {
+					stroke: #ffffff;
+				}
+			}
+
 			.search fieldset {
 				position: relative;
 
@@ -497,6 +542,14 @@
 				padding: 0 0.625em 1em;
 
 				border: none;
+			}
+
+			@media (min-width: 834px) {
+				.search fieldset {
+					height: 100%;
+					margin: 0;
+					padding: 0;
+				}
 			}
 
 			.search p {
@@ -525,6 +578,13 @@
 				transition: transform var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2);
 			}
 
+			@media (min-width: 834px) {
+				.search-field-container::before {
+					content: none;
+					display: none;
+				}
+			}
+
 			#menu:target .menu .search-field-container::before {
 				transform: none;
 				transition: transform var(--menu-slide-down-duration) ease;
@@ -547,6 +607,12 @@
 					transform calc(var(--menu-slide-down-duration) / 2) ease;
 			}
 
+			@media (min-width: 834px) {
+				.search__field {
+					display: none;	
+				}
+			}
+
 			.search__field label {
 				position: absolute;
 				top: 50%;
@@ -565,6 +631,20 @@
 				display: block;
 				width: 1em;
 				height: 1em;
+			}
+
+			.icon-search--opener {
+				display: none;
+			}
+
+			@media (min-width: 834px) {
+				.icon-search--opener {
+					display: block;
+				}
+
+				.icon-search--opener g {
+					stroke: #cfcfcf;
+				}
 			}
 
 			.search [type="search"] {
@@ -665,6 +745,14 @@
 					transform var(--menu-slide-down-duration) ease;
 			}
 
+
+			@media (min-width: 834px) {
+				.search__submit,
+				.search__cancel {
+					display: none;	
+				}
+			}
+
 			#menu:target .menu--search .search__cancel {
 				width: auto; /* Knowing the width would be nicer animation, maybe something to add via JS */
 				margin-left: 0.625em;
@@ -719,7 +807,9 @@
 			/** ********** Main ********** */
 
 			main {
-				padding: 1rem;
+				max-width: 1000px;
+				margin: 0 auto;
+				padding: 1.875em;
 			}
 
 			.screen-reader-text {
@@ -758,8 +848,21 @@
 	</head>
 	<body>
 		<!--
+			@todo
+			* Desktop View: Search
 			* Cancel chromium
+			* If JS is available use CSS classes instead of :target
 		-->
+		<svg style="display: none;">
+			<symbol id="icon-search" viewBox="0 0 10 10">
+				<title>Magnifying Glass</title>
+				<g fill="transparent" stroke="#86868b" stroke-width="1.25" stroke-linecap="round"> 
+					<circle cx="4" cy="4" r="3" />
+					<line x1="6" y1="6" x2="9" y2="9" />
+				</g>
+			</symbol>
+		</svg>
+
 		<header id="menu">
 			<div class="menu js-menu">
 				<div class="menu__panel">
@@ -793,9 +896,19 @@
 				<form class="search js-search" novalidate>
 					<fieldset>
 						<div class="search-field-container">
-							<p class="search__field js-search-field">
+							<a href="#menu-search" class="search__opener js-search-opener" hidden>
+								<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-search icon-search--opener" aria-hidden="true">
+									<g fill="transparent" stroke="#cfcfcf" stroke-width="1.25" stroke-linecap="round"> 
+										<circle cx="4" cy="4" r="3" />
+										<line x1="6" y1="6" x2="9" y2="9" />
+									</g>
+								</svg>
+								<span class="screen-reader-text">Search; Press enter or space to jump to search input.</span>
+							</a>
+
+							<p class="search__field">
 								<label for="search-text">
-									<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-search" aria-hidden="true">
+									<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-search icon-search--text" aria-hidden="true">
 										<g fill="transparent" stroke="#86868b" stroke-width="1.25" stroke-linecap="round"> 
 											<circle cx="4" cy="4" r="3" />
 											<line x1="6" y1="6" x2="9" y2="9" />
@@ -879,12 +992,12 @@
 			 */
 			(function () {
 
+				const searchOpener = document.querySelector('.js-search-opener');
 				const searchText = document.querySelector('.js-search-text');
+				const searchReset = document.querySelector('.js-search-reset');
 				const searchSubmit = document.querySelector('.js-search-submit');
-				const searchField = document.querySelector('.js-search-field');
 
 				function main() {
-					initRoleButton(document.querySelectorAll('.js-menu-button'));
 					initMenuButton();
 					initSearch();
 
@@ -910,16 +1023,20 @@
 				}
 
 				function initMenuButton() {
-					document.querySelectorAll('.js-menu-button')[0].addEventListener('click', function (e) {
-						setTimeout(() => document.querySelectorAll('.js-menu-button')[1].focus(), 1);
+					const menuButtons = document.querySelectorAll('.js-menu-button');
+
+					initRoleButton(menuButtons);
+
+					menuButtons[0].addEventListener('click', function (e) {
+						setTimeout(() => menuButtons[1].focus(), 1);
 					});
 
-					document.querySelectorAll('.js-menu-button')[1].addEventListener('click', function (e) {
+					menuButtons[1].addEventListener('click', function (e) {
 						resetSearch();
-						setTimeout(() => document.querySelectorAll('.js-menu-button')[0].focus(), 1);
+						setTimeout(() => menuButtons[0].focus(), 1);
 					});
 
-					document.querySelector('.js-search-reset').addEventListener('click', function () {
+					searchReset.addEventListener('click', function () {
 						searchText.focus();
 					});
 				}
@@ -927,14 +1044,17 @@
 				function initSearch() {
 					deactivateSearchField();
 
-					searchField.setAttribute('title', 'Search; Press enter or space to jump to search input.');
+					searchOpener.removeAttribute('hidden');
+					searchOpener.setAttribute('role', 'button');
 
-					searchField.addEventListener('click', function () {
+					searchOpener.addEventListener('click', function (e) {
+						e.preventDefault();
+
 						activateSearchField();
 						searchText.focus();
 					});
 
-					searchField.addEventListener('keydown', function (e) {
+					searchOpener.addEventListener('keydown', function (e) {
 						if (e.target.classList.contains('js-search-reset')) return;
 						if (e.target.classList.contains('js-search-text')) return;
 
@@ -961,18 +1081,18 @@
 					searchText.setAttribute('aria-expanded', 'true');
 
 					searchText.setAttribute('tabindex', '0');
+					searchReset.setAttribute('tabindex', '0');
 					searchSubmit.setAttribute('tabindex', '0');
-					searchField.setAttribute('tabindex', '-1');
-					searchField.removeAttribute('role');
+					searchOpener.setAttribute('tabindex', '-1');
 				}
 
 				function deactivateSearchField() {
 					searchText.setAttribute('aria-expanded', 'false');
 
 					searchText.setAttribute('tabindex', '-1');
+					searchReset.setAttribute('tabindex', '-1');
 					searchSubmit.setAttribute('tabindex', '-1');
-					searchField.setAttribute('tabindex', '0');
-					searchField.setAttribute('role', 'button');
+					searchOpener.setAttribute('tabindex', '0');
 				}
 
 				function resetSearch() {
