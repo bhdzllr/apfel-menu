@@ -621,7 +621,8 @@
 				}
 
 				.menu--search .search {
-					animation: search-area-delay 0.5s ease forwards;
+					grid-area: 1 / 2 / 2 / 3;
+					/*animation: search-area-delay 0.5s ease forwards;*/
 				}
 			}
 
@@ -938,6 +939,10 @@
 				outline-offset: 0;
 			}
 
+			.icon-search-cancel {
+				display: none;
+			}
+
 			@media (min-width: 834px) {
 				.search__cancel {
 					visibility: hidden;
@@ -972,6 +977,16 @@
 					transition-duration: 0.5s;
 					transition-timing-function: ease;
 					transition-delay: 0.5s;
+				}
+
+				.icon-search-cancel {
+					display: block;
+
+					opacity: 0.8;
+				}
+
+				.search__cancel:hover .icon-search-cancel {
+					opacity: 1;
 				}
 			}
 
@@ -1089,6 +1104,23 @@
 				white-space: nowrap;
 			}
 
+			@media (min-width: 834px) {
+				.screen-reader-text--only-desktop {
+					position: absolute;
+
+					width: 1px;
+					height: 1px;
+					margin: -1px;
+					padding: 0;
+					overflow: hidden;
+
+					border: 0;
+					clip-path: inset(50%);
+
+					white-space: nowrap;
+				}
+			}
+
 			.screen-reader-text--focusable:active,
 			.screen-reader-text--focusable:focus {
 				position: static;
@@ -1111,10 +1143,10 @@
 	<body id="menu-search">
 		<!--
 			@todo
-			* Desktop View: Search panel open/close (magnifing glass label flash, cancel button icon)
+			* Desktop View: Search panel open/close (magnifing glass label flash, gird-area animation)
 			* Search panel quicklinks, backdrop, animation
 			* Submit button hover color
-			* Different states after open/close and switch from mobile/desktop view
+			* Different states after open/close/search and switch from mobile/desktop view
 		-->
 		<header id="menu">
 			<div class="menu js-menu">
@@ -1198,9 +1230,14 @@
 							</p>
 						</div>
 
-
 						<button class="search__cancel js-search-cancel" hidden>
-							<span>Cancel</span>
+							<svg viewBox="0 0 30 30" width="30px" height="30px" class="icon-search-cancel" aria-hidden="true">
+								<g stroke="#86868b" stroke-linecaps="round">
+									<line x1="8" y1="8" x2="22" y2="22" />
+									<line x1="8" y1="22" x2="22" y2="8" />
+								</g>
+							</svg>
+							<span class="screen-reader-text--only-desktop">Cancel</span>
 						</button>
 					</fieldset>
 				</form>
