@@ -1328,6 +1328,7 @@
 
 					searchText.addEventListener('focus', function () {
 						menu.classList.add('menu--search');
+						activateSearchField();
 					});
 					searchText.setAttribute('aria-owns', 'quicklinks'); // More aria attributes needed in case of autocomplete
 
