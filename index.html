@@ -21,7 +21,18 @@
 				--nav-padding: 0.375em 2.5em 0.5em;
 			}
 
-			:focus {
+			*:focus {
+				outline: 2px solid transparent;
+				outline-offset: 2px;
+			}
+
+			*:focus:not(:focus-visible) {
+				outline: 2px solid transparent;
+				outline-offset: 2px;
+				box-shadow: none;
+			}
+
+			*:focus-visible {
 				outline: 2px solid #2997ff;
 				outline-offset: 2px;
 				z-index: 1;
