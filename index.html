@@ -914,8 +914,8 @@
 				display: flex;
 				width: 0;
 				align-items: center;
-				margin-left: 0.625em;
-				padding: 0 0.5em;
+				margin: 0;
+				padding: 0;
 				overflow: hidden;
 				visibility: hidden;
 
@@ -927,7 +927,8 @@
 				transform: translateX(100%);
 				transition: visibility var(--menu-slide-down-duration) ease,
 					opacity var(--menu-slide-down-duration) ease,
-					transform var(--menu-slide-down-duration) ease;
+					transform var(--menu-slide-down-duration) ease,
+					width 0.5s ease;
 
 				color: #2997ff;
 				font-size: inherit;
@@ -937,6 +938,18 @@
 
 			.search__cancel:focus {
 				outline-offset: 0;
+			}
+
+			#menu:target .menu--search .search__cancel,
+			.menu-open .menu--search .search__cancel {
+				width: auto; /* Knowing the width would be nicer animation, maybe something to add via JS */
+				margin-left: 0.625em;
+				padding: 0 0.5em;
+				overflow: visible;
+				visibility: visible;
+
+				opacity: 1;
+				transform: none;
 			}
 
 			.icon-search-cancel {
@@ -1021,18 +1034,6 @@
 				.search__submit {
 					display: none;	
 				}
-			}
-
-			#menu:target .menu--search .search__cancel,
-			.menu-open .menu--search .search__cancel {
-				width: auto; /* Knowing the width would be nicer animation, maybe something to add via JS */
-				margin-left: 0.625em;
-				padding: 0 0.5em;
-				overflow: visible;
-				visibility: visible;
-
-				opacity: 1;
-				transform: none;
 			}
 
 			/** ********** Search Result ********** */
