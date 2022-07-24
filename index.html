@@ -15,10 +15,13 @@
 
 		<style>
 			:root {
+				--header-background-color: rgba(0, 0, 0, 0.9);
+				--header-background-color--open: rgba(0, 0, 0, 1);
 				--header-height: 48px;
 				--icon-width-height: 48px;
-				--menu-slide-down-duration: 0.5s;
+				--default-duration: 0.5s;
 				--nav-padding: 0.375em 2.5em 0.5em;
+				--search-field-background-color: #1d1d1f;
 			}
 
 			*:focus {
@@ -66,14 +69,14 @@
 				display: flex;
 				justify-content: center;
 				
-				background-color: rgba(0, 0, 0, 0.9);
-				transition: background-color calc(var(--menu-slide-down-duration) / 2) ease calc(var(--menu-slide-down-duration) / 2)
+				background-color: var(--header-background-color);
+				transition: background-color calc(var(--default-duration) / 2) ease calc(var(--default-duration) / 2)
 			}
 
 			#menu:target,
 			.menu-open {
-				background-color: rgba(0, 0, 0, 1);
-				transition: background-color calc(var(--menu-slide-down-duration) / 4) ease;
+				background-color: var(--header-background-color--open);
+				transition: background-color calc(var(--default-duration) / 4) ease;
 			}
 
 			.menu {
@@ -83,13 +86,15 @@
 				height: var(--header-height);
 				overflow: hidden;
 
-				transition: height var(--menu-slide-down-duration) ease-in-out;
+				transition: height var(--default-duration) ease-in-out;
 
 				color: #cfcfcf;
 			}
 
 			@media (min-width: 834px) {
 				.menu {
+					position: relative;
+
 					grid-template-rows: var(--header-height) 240px;
 					grid-template-columns: var(--header-height) 1fr var(--header-height);
 					max-width: 1000px;
@@ -103,7 +108,7 @@
 			.menu-open .menu {
 				height: calc(100vh + var(--header-height));
 
-				transition: height var(--menu-slide-down-duration) ease-in-out, transform var(--menu-slide-down-duration) ease;
+				transition: height var(--default-duration) ease-in-out, transform var(--default-duration) ease;
 			}
 
 			@media (min-width: 834px) {
@@ -116,7 +121,7 @@
 			#menu:target .menu--search,
 			.menu-open .menu--search {
 				transform: translateY(calc(var(--header-height) * -1 + 1em));
-				transition: transform var(--menu-slide-down-duration) ease;
+				transition: transform var(--default-duration) ease;
 			}
 
 			.menu a {
@@ -140,6 +145,7 @@
 				position: relative;
 			}
 
+			.menu__action:focus svg line,
 			.menu__action:hover svg line {
 				stroke: #ffffff;
 			}
@@ -302,7 +308,7 @@
 			#menu:target .menu--search .menu__logo,
 			.menu-open .menu--search .menu__logo {
 				transform: scale(0.5);
-				transition: transform 0.2s ease calc(var(--menu-slide-down-duration) / 2);
+				transition: transform 0.2s ease calc(var(--default-duration) / 2);
 			}
 
 			/** ********** Navigation and Search Panel ********** */
@@ -322,7 +328,7 @@
 				overflow-y: hidden;
 				visibility: hidden;
 
-				transition: visibility var(--menu-slide-down-duration) ease;
+				transition: visibility var(--default-duration) ease;
 			}
 
 			#menu:target .menu .nav,
@@ -332,7 +338,7 @@
 				overflow-y: auto;
 				visibility: visible;
 
-				animation: nav-overflow-delay var(--menu-slide-down-duration) ease forwards;
+				animation: nav-overflow-delay var(--default-duration) ease forwards;
 			}
 
 			@media (min-width: 834px) {
@@ -365,7 +371,7 @@
 
 			#menu:target .menu .nav,
 			.menu-open .menu .nav {
-				transition: all var(--menu-slide-down-duration) ease;
+				transition: all var(--default-duration) ease;
 			}
 
 			#menu:target .menu--search .nav,
@@ -374,7 +380,7 @@
 
 				opacity: 0;
 				transform: translateY(40px);
-				transition: all var(--menu-slide-down-duration) ease;
+				transition: all var(--default-duration) ease;
 			}
 
 			/** Delay overflow-y until menu animation is done */
@@ -401,7 +407,7 @@
 					width: 100%;
 					height: 100%;
 
-					transition: visibility 0.5s ease;
+					transition: visibility var(--default-duration) ease;
 				}
 
 				.menu--search .nav-list--main {
@@ -496,7 +502,6 @@
 				.nav-list--main li {
 					opacity: 1;
 					transform: scale(1);
-					transition: all 0.45s ease;
 				}
 
 				.menu--search .nav-list--main li {
@@ -590,7 +595,7 @@
 
 				visibility: hidden;
 
-				transition: visibility var(--menu-slide-down-duration) ease;
+				transition: visibility var(--default-duration) ease;
 			}
 
 			#menu:target .menu .search,
@@ -611,34 +616,27 @@
 				background-color: #424245;
 				opacity: 0;
 				transform: translateY(-1.250em);
-				transition: transform var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2), opacity var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2);
+				transition: transform var(--default-duration) ease calc(var(--default-duration) / 2), opacity var(--default-duration) ease calc(var(--default-duration) / 2);
 			}
 
 			#menu:target .menu .search::after,
 			.menu-open .menu .search::after {
 				opacity: 1;
 				transform: none;
-				transition: all var(--menu-slide-down-duration) ease;
+				transition: all var(--default-duration) ease;
 			}
 
 			@media (min-width: 834px) {
 				.search {
+					position: static;
+
+					grid-area: 1 / 2 / 2 / 3;
 					visibility: visible;
 				}
 
 				.search::after {
 					content: none;
 				}
-
-				.menu--search .search {
-					grid-area: 1 / 2 / 2 / 3;
-					/*animation: search-area-delay 0.5s ease forwards;*/
-				}
-			}
-
-			@keyframes search-area-delay {
-				99%  { grid-area: initial; }
-				100% { grid-area: 1 / 2 / 2 / 3; }
 			}
 
 			.search__opener {
@@ -657,9 +655,14 @@
 
 			@media (min-width: 834px) {
 				.search__opener {
+					left: auto;
+					right: 1.375em;
+
 					display: flex;
 					justify-content: center;
 					align-items: center;
+					width: var(--icon-width-height);
+					height: 100%;
 
 					opacity: 1;
 					transform: scale(1);
@@ -674,6 +677,7 @@
 					outline-offset: -4px;
 				}
 
+				.search__opener:focus svg g,
 				.search__opener:hover svg g {
 					stroke: #ffffff;
 				}
@@ -683,7 +687,7 @@
 
 					opacity: 0;
 					transform: scale(0.75);
-					transition: opacity 0.45s ease 0.01s, transform 0.45s ease 0.01s, visibility 0.01s ease 0.5s;
+					transition: opacity 0.45s ease 0.01s, transform 0.45s ease 0.01s, visibility 0.01s ease var(--default-duration);
 				}
 			}
 
@@ -700,6 +704,9 @@
 
 			@media (min-width: 834px) {
 				.search fieldset {
+					position: static;
+
+					display: flex;
 					height: 100%;
 					max-width: 640px;
 					padding: 0;
@@ -725,30 +732,32 @@
 				width: 100%;
 				height: 100%;
 
-				background-color: #1d1d1f;
+				background-color: var(--search-field-background-color);
 				border-radius: 0.5em;
 				transform: scaleY(0);
 				transform-origin: 0 0;
-				transition: transform var(--menu-slide-down-duration) ease calc(var(--menu-slide-down-duration) / 2);
+				transition: transform var(--default-duration) ease calc(var(--default-duration) / 2);
 			}
 
 			@media (min-width: 834px) {
+				.search-field-container {
+					position: static;
+
+					display: flex;
+					align-items: center;
+					flex: 1 1 auto;
+				}
+
 				.search-field-container::before {
 					content: none;
 					display: none;
-				}
-
-				.menu--search .search-field-container {
-					display: flex;
-					align-items: center;
-					flex: 1 0 auto;
 				}
 			}
 
 			#menu:target .menu .search-field-container::before,
 			.menu-open .menu .search-field-container::before  {
 				transform: none;
-				transition: transform var(--menu-slide-down-duration) ease;
+				transition: transform var(--default-duration) ease;
 			}
 
 			.search__field {
@@ -758,57 +767,38 @@
 
 				opacity: 0;
 				transform: translateY(-0.625em);
-				transition: all calc(var(--menu-slide-down-duration) / 2) ease calc(var(--menu-slide-down-duration) / 2);
+				transition: all calc(var(--default-duration) / 2) ease calc(var(--default-duration) / 2);
 			}
 
 			#menu:target .menu .search__field,
 			.menu-open .menu .search__field {
 				opacity: 1;
 				transform: none;
-				transition: opacity calc(var(--menu-slide-down-duration) / 2) ease,
-					transform calc(var(--menu-slide-down-duration) / 2) ease;
+				transition: opacity calc(var(--default-duration) / 2) ease,
+					transform calc(var(--default-duration) / 2) ease;
 			}
 
 			@media (min-width: 834px) {
 				.search__field {
-					width: 0;
-					height: 0;
 					visibility: hidden;
 
 					opacity: 0;
-					transition: all 0.5s ease 0.5s;
-					transform: translateX(50px);
+					transform: translate(40px, 0);
+					transition:
+						visibility var(--default-duration) ease,
+						opacity var(--default-duration) ease,
+						transform var(--default-duration) ease;
 				}
 
 				.menu--search .search__field {
 					visibility: visible;
 
 					opacity: 1;
-
-					animation: search-in-desktop 1s ease forwards;
-				}
-			}
-
-			@keyframes search-in-desktop {
-				40% {
-					visibility: hidden;
-
-					opacity: 0;
-					transform: translateX(50px);
-				}
-
-				95% {
-					width: auto;
-					height: auto;
-				}
-
-				100% {
-					width: auto;
-					height: auto;
-					visibility: visible;
-
-					opacity: 1;
 					transform: none;
+					transition:
+						visibility var(--default-duration) ease var(--default-duration),
+						opacity var(--default-duration) ease var(--default-duration),
+						transform var(--default-duration) ease var(--default-duration);
 				}
 			}
 
@@ -826,10 +816,11 @@
 				transform: translateY(-50%);
 			}
 
-			/*.search__field label svg g {
-				fill: red;
-				stroke: red;
-			}*/
+			@media (min-width: 834px) {
+				.search__field label {
+					width: 2em;
+				}
+			}
 
 			.icon-search {
 				display: block;
@@ -848,6 +839,17 @@
 
 				.icon-search--opener g {
 					stroke: #cfcfcf;
+				}
+			}
+
+			.icon-search--submit {
+				margin: 0 auto;
+				background-color: var(--search-field-background-color);
+			}
+
+			@media (min-width: 834px) {
+				.icon-search--submit {
+					/*background-color: var(--header-background-color);*/
 				}
 			}
 
@@ -880,6 +882,10 @@
 			}
 
 			@media (min-width: 834px) {
+				.search [type="search"] {
+					padding: 0.175em 0.25em 0.235em 2.25em;
+				}
+
 				.search [type="search"]:valid ~ [type="reset"] {
 					display: none;
 				}
@@ -935,19 +941,15 @@
 				cursor: pointer;
 				opacity: 0;
 				transform: translateX(100%);
-				transition: visibility var(--menu-slide-down-duration) ease,
-					opacity var(--menu-slide-down-duration) ease,
-					transform var(--menu-slide-down-duration) ease,
-					width 0.5s ease;
+				transition: visibility var(--default-duration) ease,
+					opacity var(--default-duration) ease,
+					transform var(--default-duration) ease,
+					width var(--default-duration) ease;
 
 				color: #2997ff;
 				font-size: inherit;
 				font-family: inherit;
 				font-weight: inherit;
-			}
-
-			.search__cancel:focus {
-				outline-offset: 0;
 			}
 
 			#menu:target .menu--search .search__cancel,
@@ -962,6 +964,16 @@
 				transform: none;
 			}
 
+			.search__cancel:focus {
+				outline-color: transparent;
+				outline-offset: 0;
+			}
+
+			#menu:target .menu--search .search__cancel:focus,
+			.menu-open .menu--search .search__cancel:focus {
+				outline-color: inherit;
+			}
+
 			.icon-search-cancel {
 				display: none;
 			}
@@ -969,45 +981,39 @@
 			@media (min-width: 834px) {
 				.search__cancel {
 					visibility: hidden;
-					width: 0;
-					margin: 0;
-					padding: 0;
 
-					transform: translate(40px, -50%);
-				}
-
-				.search__cancel:focus {
-					outline-color: transparent;
+					opacity: 0;
+					transform: translateX(40px);
 				}
 
 				.menu--search .search__cancel:focus {
 					outline-color: inherit;
-					outline-offset: 0;
+					outline-offset: -4px;
 				}
 
 				.menu--search .search__cancel {
-					position: absolute;
-					top: 50%;
-					right: 0;
+					z-index: 1;
 
-					width: auto;
-					height: 80%;
+					flex: 0 0 auto;
+					width: 2em;
 					visibility: visible;
 
 					opacity: 1;
-					transform: translate(0, -50%);
+					transform: none;
 					transition: visibility, opacity, transform;
-					transition-duration: 0.5s;
+					transition-duration: var(--default-duration);
 					transition-timing-function: ease;
-					transition-delay: 0.5s;
+					transition-delay: var(--default-duration);
 				}
 
 				.icon-search-cancel {
 					display: block;
+					margin: 0 auto;
 
 					opacity: 0.8;
 				}
 
+				.search__cancel:focus .icon-search-cancel,
 				.search__cancel:hover .icon-search-cancel {
 					opacity: 1;
 				}
@@ -1020,16 +1026,23 @@
 				z-index: 1;
 
 				display: block;
-				width: 2em;
+				width: 1.75em;
 				padding: 0;
 
 				background: none;
 				border: none;
 				cursor: pointer;
+
+				font-size: 1em;
 			}
 
 			.search__submit:focus {
 				outline-offset: 0;
+			}
+
+			.search__submit:focus svg g,
+			.search__submit:hover svg g {
+				stroke: #afafaf;
 			}
 
 			.search [type="search"]:invalid ~ .search__submit {
@@ -1042,7 +1055,8 @@
 
 			@media (min-width: 834px) {
 				.search__submit {
-					display: none;	
+					display: none;
+					width: 2em;
 				}
 			}
 
@@ -1056,7 +1070,7 @@
 
 				opacity: 0;
 				transform: translateY(-80px);
-				transition: all var(--menu-slide-down-duration) ease;
+				transition: all var(--default-duration) ease;
 			}
 
 			@media (min-width: 834px) {
@@ -1154,9 +1168,7 @@
 	<body id="menu-search">
 		<!--
 			@todo
-			* Desktop View: Search panel open/close (magnifing glass label flash, gird-area animation)
 			* Search panel quicklinks, backdrop, animation
-			* Submit button hover color
 			* Different states after open/close/search and switch from mobile/desktop view
 		-->
 		<header id="menu">
@@ -1226,6 +1238,12 @@
 								/>
 
 								<button type="submit" class="search__submit js-search-submit">
+									<svg viewBox="0 0 10 10" width="10px" height="10px" class="icon-search icon-search--submit" aria-hidden="true">
+										<g fill="transparent" stroke="#86868b" stroke-width="1.25" stroke-linecap="round"> 
+											<circle cx="4" cy="4" r="3" />
+											<line x1="6" y1="6" x2="9" y2="9" />
+										</g>
+									</svg>
 									<span class="screen-reader-text">Search</span>
 								</button>
 
@@ -1375,6 +1393,8 @@
 					});
 
 					searchText.addEventListener('focus', function () {
+						if (getViewportWidth() >= MIN_WIDTH_BREAKPOINT) return; // Prevent on desktop
+
 						menu.classList.add('menu--search');
 						activateSearchField();
 					});
@@ -1402,6 +1422,7 @@
 				function deactivateSearchField() {
 					menu.classList.remove('menu--search');
 
+					searchText.blur();
 					searchText.setAttribute('aria-expanded', 'false');
 
 					searchText.setAttribute('tabindex', '-1');
