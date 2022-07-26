@@ -365,6 +365,7 @@
 					max-height: calc(100vh - (var(--header-height) + 1em));
 					padding: 0;
 					overflow-y: auto;
+					overflow-x: hidden;
 					visibility: hidden;
 
 					background-color: #ffffff;
@@ -608,8 +609,6 @@
 
 				.nav-list--quicklinks li {
 					margin: 0.375em -2em;
-
-					/*border: 1px solid red;*/
 				}  
 
 				.nav-list--quicklinks li a {
@@ -617,9 +616,38 @@
 					min-height: 2em;
 					padding: 0 3.45em;
 
+					opacity: 0;
+					transform: translateX(100px);
+					transition: opacity var(--default-duration) ease, transform var(--default-duration) ease;
+
 					color: #1d1d1f;
 					font-size: 0.875em;
 					line-height: 1.750;
+				}
+
+				.nav-list--quicklinks li:nth-child(1) a {
+					transition-delay: 0.22s;
+				}
+
+				.nav-list--quicklinks li:nth-child(2) a {
+					transition-delay: 0.24s;
+				}
+
+				.nav-list--quicklinks li:nth-child(3) a {
+					transition-delay: 0.26s;
+				}
+
+				.nav-list--quicklinks li:nth-child(4) a {
+					transition-delay: 0.28s;
+				}
+
+				.nav-list--quicklinks li:nth-child(5) a {
+					transition-delay: 0.30s;
+				}
+
+				.menu--search .nav-list--quicklinks li a {
+					opacity: 1;
+					transform: none;
 				}
 
 				.nav-list--quicklinks li a:hover {
@@ -1138,7 +1166,17 @@
 				.quicklinks figcaption {
 					padding: 0;
 
+					opacity: 0;
+					transform: translateX(100px);
+					transition: opacity var(--default-duration) ease, transform var(--default-duration) ease;
+					transition-delay: 0.2s;
+
 					line-height: 1.25;
+				}
+
+				.menu--search figcaption {
+					opacity: 1;
+					transform: none;
 				}
 			}
 
@@ -1237,7 +1275,6 @@
 	<body>
 		<!--
 			@todo
-			* Search panel: Quicklinks styling and slide in animation
 			* Different states after open/close/search and switch from mobile/desktop view
 		-->
 		<header id="menu">
