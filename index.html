@@ -1352,12 +1352,12 @@
 				Source Code on <a href="https://github.com/bhdzllr/apfel-menu">GitHub</a>
 			</p>
 
-			<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+			<!-- <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 			<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 			<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 			<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
 
-			<p>EOF</p>
+			<p>EOF</p> -->
 		</main>
 
 		<script>
@@ -1522,18 +1522,19 @@
 				}
 
 				function activateBodyScroll() {
-					document.documentElement.style.height = 'auto';
-					document.documentElement.style.overflowY = 'auto';
+					// document.documentElement.style.height = 'auto';
+					// document.documentElement.style.overflowY = 'auto';
 
-					document.body.style.height = 'auto';
+					// document.body.style.height = 'auto';
 					document.body.style.overflowY = 'auto';
 				}
 
 				function deactivateBodyScroll() {
-					document.documentElement.style.height = '100vh';
-					document.documentElement.style.overflowY = 'scroll';
+					// If this is used it needs a check for desktop and if there is enough space or not
+					// document.documentElement.style.height = '100vh';
+					// document.documentElement.style.overflowY = 'scroll';
 
-					document.body.style.height = '90vh';
+					// document.body.style.height = '90vh';
 					document.body.style.overflowY = 'hidden';
 				}
 
