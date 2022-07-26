@@ -916,12 +916,6 @@
 				background-color: var(--search-field-background-color);
 			}
 
-			@media (min-width: 834px) {
-				.icon-search--submit {
-					/*background-color: var(--header-background-color);*/
-				}
-			}
-
 			.search [type="search"] {
 				position: relative;
 
@@ -1023,7 +1017,7 @@
 
 			#menu:target .menu--search .search__cancel,
 			.menu-open .menu--search .search__cancel {
-				width: auto; /* Knowing the width would be nicer animation, maybe something to add via JS */
+				width: auto; /* @todo Knowing the width would be nicer animation, maybe something to add via JS */
 				margin-left: 0.625em;
 				padding: 0 0.5em;
 				overflow: visible;
@@ -1516,7 +1510,7 @@
 						menu.classList.add('menu--search');
 						activateSearchField();
 					});
-					searchText.setAttribute('aria-owns', 'quicklinks'); // More aria attributes needed in case of autocomplete
+					searchText.setAttribute('aria-owns', 'quicklinks'); // @todo More aria attributes needed in case of autocomplete
 
 					document.querySelector('.js-search-cancel').addEventListener('click', function (e) {
 						e.preventDefault();
@@ -1591,7 +1585,7 @@
 				}
 
 				function deactivateBodyScroll() {
-					// If this is used it needs a check for desktop and if there is enough space or not
+					// @todo If this is used it needs a check for desktop and if there is enough space or not
 					// document.documentElement.style.height = '100vh';
 					// document.documentElement.style.overflowY = 'scroll';
 
