@@ -65,6 +65,7 @@
 				top: 0;
 				right: 0;
 				left: 0;
+				z-index: 9999;
 
 				display: flex;
 				justify-content: center;
@@ -95,7 +96,7 @@
 				.menu {
 					position: relative;
 
-					grid-template-rows: var(--header-height) 240px;
+					grid-template-rows: var(--header-height) min-content;
 					grid-template-columns: var(--header-height) 1fr var(--header-height);
 					max-width: 1000px;
 					margin: 0 -0.5em;
@@ -360,12 +361,23 @@
 					grid-row-end: 3;
 					grid-column-start: 2;
 					grid-column-end: 3;
+					height: auto;
+					max-height: calc(100vh - (var(--header-height) + 1em));
 					padding: 0;
+					overflow-y: auto;
 					visibility: hidden;
+
+					background-color: #ffffff;
+					border-radius: 0 0 0.5em 0.5em;
+					opacity: 0;
+					transition: all calc(var(--default-duration) / 3) ease;
 				}
 
 				.menu--search .search-panel {
 					visibility: visible;
+
+					opacity: 1;
+					transition: all calc(var(--default-duration) / 3) ease calc(var(--default-duration) / 3);
 				}
 			}
 
@@ -586,6 +598,13 @@
 
 			.nav-list--quicklinks li a:hover {
 				color: #2997ff;
+			}
+
+			@media (min-width: 834px) {
+				.nav-list--quicklinks {
+					flex-direction: column;
+					align-items: flex-start;
+				}
 			}
 
 			/** ********** Search ********* */
@@ -1073,21 +1092,6 @@
 				transition: all var(--default-duration) ease;
 			}
 
-			@media (min-width: 834px) {
-				.quicklinks {
-					visibility: hidden;
-
-					background-color: #ffffff;
-					border-radius: 0 0 0.5em 0.5em;
-					opacity: 1;
-					transform: none;
-				}
-
-				.menu--search .quicklinks {
-					visibility: visible;
-				}
-			}
-
 			.quicklinks figcaption {
 				display: block;
 				padding: calc(0.35em + 0.375em) 0 0.35em;
@@ -1098,12 +1102,53 @@
 				text-transform: uppercase;
 			}
 
+			@media (min-width: 834px) {
+				.quicklinks {
+					margin: 0 2.5em;
+					padding: 1.5em 0 1.125em;
+
+					transform: none;
+					transition: none;
+					background-color: #ffffff;
+					transition: all calc(var(--default-duration) / 3) ease;	
+				}
+
+				.quicklinks figcaption {
+					padding: 0;
+				}
+			}
+
 			#menu:target .menu--search .quicklinks,
-			.menu-open .menu--search .quicklinks {
+			.menu-open .menu--search .quicklinks, {
 				visibility: visible;
 
 				opacity: 1;
 				transform: none;
+			}
+
+			@media (min-width: 834px) {
+				.menu--search .quicklinks {
+					visibility: visible;
+
+					opacity: 1;
+					transition: all calc(var(--default-duration) / 3) ease;	
+				}
+			}
+
+			.search-curtain {
+				position: fixed;
+				z-index: 9998;
+
+				width: 100%;
+				height: 100%;
+
+				background-color: rgba(0, 0, 0, 0.48);
+				opacity: 0;
+				transition: opacity var(--default-duration) ease;
+			}
+
+			.search-curtain--in {
+				opacity: 1;
 			}
 
 			/** ********** Main ********** */
@@ -1165,10 +1210,10 @@
 			}
 		</style>
 	</head>
-	<body id="menu-search">
+	<body>
 		<!--
 			@todo
-			* Search panel quicklinks, backdrop, animation
+			* Search panel: Quicklinks styling and slide in animation
 			* Different states after open/close/search and switch from mobile/desktop view
 		-->
 		<header id="menu">
@@ -1306,6 +1351,13 @@
 				Made by <a href="https://twitter.com/bhdzllr">@bhdzllr</a><br />
 				Source Code on <a href="https://github.com/bhdzllr/apfel-menu">GitHub</a>
 			</p>
+
+			<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+			<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+			<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+			<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+			<p>EOF</p>
 		</main>
 
 		<script>
@@ -1315,12 +1367,15 @@
 			(function () {
 
 				const MIN_WIDTH_BREAKPOINT = 834;
+				const DEFAULT_DURATION = 500;
 
 				const menu = document.querySelector('.js-menu');
+				const header = menu.parentNode;
 				const searchOpener = document.querySelector('.js-search-opener');
 				const searchText = document.querySelector('.js-search-text');
 				const searchReset = document.querySelector('.js-search-reset');
 				const searchSubmit = document.querySelector('.js-search-submit');
+				const searchCurtain = document.createElement('div');
 
 				function main() {
 					initMenuButton();
@@ -1354,14 +1409,16 @@
 
 					menuButtons[0].addEventListener('click', function (e) {
 						e.preventDefault();
-						menu.parentElement.classList.add('menu-open');
+						header.classList.add('menu-open');
+						deactivateBodyScroll();
 						setTimeout(() => menuButtons[1].focus(), 1);
 					});
 
 					menuButtons[1].addEventListener('click', function (e) {
 						e.preventDefault();
-						resetSearch();
-						menu.parentElement.classList.remove('menu-open');
+						deactivateSearchField();
+						header.classList.remove('menu-open');
+						activateBodyScroll();
 						setTimeout(() => menuButtons[0].focus(), 1);
 					});
 
@@ -1393,7 +1450,7 @@
 					});
 
 					searchText.addEventListener('focus', function () {
-						if (getViewportWidth() >= MIN_WIDTH_BREAKPOINT) return; // Prevent on desktop
+						if (isDesktop()) return; // Prevent on desktop
 
 						menu.classList.add('menu--search');
 						activateSearchField();
@@ -1402,7 +1459,13 @@
 
 					document.querySelector('.js-search-cancel').addEventListener('click', function (e) {
 						e.preventDefault();
-						resetSearch();
+						deactivateSearchField();
+					});
+
+					searchCurtain.classList.add('search-curtain');
+
+					searchCurtain.addEventListener('click', function () {
+						deactivateSearchField();
 					});
 				}
 
@@ -1417,11 +1480,19 @@
 					searchOpener.setAttribute('tabindex', '-1');
 
 					focusSearchText();
+					deactivateBodyScroll();
+
+					if (isDesktop()) {
+						header.parentNode.insertBefore(searchCurtain, header.nextSibling);
+						window.getComputedStyle(searchCurtain).opacity;
+						searchCurtain.classList.add('search-curtain--in');
+					}
 				}
 
 				function deactivateSearchField() {
 					menu.classList.remove('menu--search');
 
+					searchText.value = '';
 					searchText.blur();
 					searchText.setAttribute('aria-expanded', 'false');
 
@@ -1429,19 +1500,37 @@
 					searchReset.setAttribute('tabindex', '-1');
 					searchSubmit.setAttribute('tabindex', '-1');
 					searchOpener.setAttribute('tabindex', '0');
-				}
 
-				function resetSearch() {
-					searchText.value = '';
-					deactivateSearchField();
+					if (isDesktop()) {
+						if (searchCurtain.parentNode) {
+							searchCurtain.classList.remove('search-curtain--in');
+							setTimeout(() => {
+								searchCurtain.parentNode.removeChild(searchCurtain);
+							}, DEFAULT_DURATION);
+						}
+
+						activateBodyScroll();
+					}
 				}
 
 				function focusSearchText() {
-					if (getViewportWidth() >= MIN_WIDTH_BREAKPOINT) {
-						setTimeout(() => searchText.focus(), 1000);
+					if (isDesktop()) {
+						setTimeout(() => searchText.focus(), DEFAULT_DURATION * 2);
 					} else {
 						searchText.focus();
 					}
+				}
+
+				function activateBodyScroll() {
+					document.body.style.overflow = 'auto';
+				}
+
+				function deactivateBodyScroll() {
+					document.body.style.overflow = 'hidden';
+				}
+
+				function isDesktop() {
+					return getViewportWidth() >= MIN_WIDTH_BREAKPOINT;
 				}
 
 				function getViewportWidth() {
