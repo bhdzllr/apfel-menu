@@ -1617,7 +1617,8 @@
 				}
 
 				function deactivateBodyScroll() {
-					const hasScrollbar = document.body.scrollHeight > window.innerHeight;
+					const viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+					const hasScrollbar = document.body.scrollHeight > viewportHeight;
 					if (!hasScrollbar) return;
 
 					document.documentElement.style.overflowY = 'scroll';
