@@ -58,6 +58,10 @@
 				padding-top: var(--header-height);
 			}
 
+			a {
+				color: #2997ff;
+			}
+
 			/** ********** Menu ********** */
 
 			header {
@@ -1519,6 +1523,7 @@
 					});
 					searchText.setAttribute('aria-owns', 'quicklinks'); // @todo More aria attributes needed in case of autocomplete
 
+					console.log(document.querySelector('.js-search-cancel'));
 					document.querySelector('.js-search-cancel').addEventListener('click', function (e) {
 						e.preventDefault();
 						deactivateSearchField();
