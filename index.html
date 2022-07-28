@@ -1384,7 +1384,7 @@
 					</figure>
 				</div>
 
-				<nav class="nav">
+				<nav class="nav js-nav">
 					<ul class="nav-list nav-list--main">
 						<li><a href="#">Store</a></li>
 						<li><a href="#">Mac</a></li>
@@ -1425,6 +1425,7 @@
 				const DEFAULT_DURATION = 500;
 				const mq = window.matchMedia(`(min-width: ${MIN_WIDTH_BREAKPOINT}px)`);
 
+				const nav = document.querySelector('.js-nav');
 				const menu = document.querySelector('.js-menu');
 				const header = menu.parentNode;
 				const menuButtons = document.querySelectorAll('.js-menu-button');
@@ -1434,9 +1435,26 @@
 				const searchSubmit = document.querySelector('.js-search-submit');
 				const searchCurtain = document.createElement('div');
 
+				let isMobileMenuOpen = false;
+				let isSearchOpen = false;
+
 				function main() {
 					initMenuButton();
 					initSearch();
+
+					document.addEventListener('keydown', function (e) {
+						const keyCode = e.which || e.keyCode;
+
+						if (keyCode !== 27) return;
+
+						if (isMobileMenuOpen && isSearchOpen) {
+							deactivateSearchField();
+						} else if (isMobileMenuOpen) {
+							deactivateMobileMenu();
+						} else if (isSearchOpen) {
+							deactivateSearchField();
+						}
+					});
 
 					document.querySelector('.js-search').addEventListener('submit', e => {
 						e.preventDefault();
@@ -1450,7 +1468,7 @@
 						// 	console.log('mobile');
 						// }
 
-						deactivateMenu();
+						deactivateMobileMenu();
 					});
 				}
 
@@ -1459,12 +1477,12 @@
 
 					menuButtons[0].addEventListener('click', function (e) {
 						e.preventDefault();
-						activateMenu();
+						activateMobileMenu();
 					});
 
 					menuButtons[1].addEventListener('click', function (e) {
 						e.preventDefault();
-						deactivateMenu();
+						deactivateMobileMenu();
 					});
 
 					searchReset.addEventListener('click', function () {
@@ -1518,16 +1536,30 @@
 						deactivateSearchField();
 						activateBodyScroll();
 					});
+
+					header.addEventListener('click', function (e) {
+						if (
+							e.target === header
+							|| e.target === menu
+							|| e.target === nav
+						) {
+							deactivateSearchField();
+						}
+					});
 				}
 
-				function activateMenu() {
+				function activateMobileMenu() {
+					isMobileMenuOpen = true;
+
 					header.classList.add('menu-open');
 					setTimeout(() => menuButtons[1].focus(), 1);
 
 					deactivateBodyScroll();
 				}
 
-				function deactivateMenu() {
+				function deactivateMobileMenu() {
+					isMobileMenuOpen = false;
+
 					header.classList.remove('menu-open');
 					setTimeout(() => menuButtons[0].focus(), 1);
 
@@ -1536,6 +1568,8 @@
 				}
 
 				function activateSearchField() {
+					isSearchOpen = true;
+
 					menu.classList.add('menu--search');
 
 					searchText.setAttribute('aria-expanded', 'true');
@@ -1557,6 +1591,8 @@
 				}
 
 				function deactivateSearchField() {
+					isSearchOpen = false;
+
 					menu.classList.remove('menu--search');
 
 					searchText.value = '';
