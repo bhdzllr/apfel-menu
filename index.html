@@ -1269,7 +1269,7 @@
 	<body>
 		<!--
 			@todo
-			* Different states after open/close/search and switch from mobile/desktop view
+			* ESC as search cancel
 		-->
 		<header id="menu">
 			<div class="menu js-menu">
@@ -1423,9 +1423,11 @@
 
 				const MIN_WIDTH_BREAKPOINT = 834;
 				const DEFAULT_DURATION = 500;
+				const mq = window.matchMedia(`(min-width: ${MIN_WIDTH_BREAKPOINT}px)`);
 
 				const menu = document.querySelector('.js-menu');
 				const header = menu.parentNode;
+				const menuButtons = document.querySelectorAll('.js-menu-button');
 				const searchOpener = document.querySelector('.js-search-opener');
 				const searchText = document.querySelector('.js-search-text');
 				const searchReset = document.querySelector('.js-search-reset');
@@ -1440,41 +1442,29 @@
 						e.preventDefault();
 						alert('This is a demo, search not implemented.');
 					});
-				}
 
-				function initRoleButton(buttons) {
-					for (let i = 0; i < buttons.length; i++) {
-						buttons[i].setAttribute('role', 'button');
+					mq.addEventListener('change', function (e) {
+						// if (e.matches) {
+						// 	console.log('desktop');
+						// } else {
+						// 	console.log('mobile');
+						// }
 
-						buttons[i].addEventListener('keydown', function (e) {
-							const keyCode = e.which || e.keyCode;
-
-							if (keyCode === 13 || keyCode === 32) {
-								e.preventDefault();
-								buttons[i].click();
-							}
-						});
-					}
+						deactivateMenu();
+					});
 				}
 
 				function initMenuButton() {
-					const menuButtons = document.querySelectorAll('.js-menu-button');
-
 					initRoleButton(menuButtons);
 
 					menuButtons[0].addEventListener('click', function (e) {
 						e.preventDefault();
-						header.classList.add('menu-open');
-						deactivateBodyScroll();
-						setTimeout(() => menuButtons[1].focus(), 1);
+						activateMenu();
 					});
 
 					menuButtons[1].addEventListener('click', function (e) {
 						e.preventDefault();
-						deactivateSearchField();
-						header.classList.remove('menu-open');
-						activateBodyScroll();
-						setTimeout(() => menuButtons[0].focus(), 1);
+						deactivateMenu();
 					});
 
 					searchReset.addEventListener('click', function () {
@@ -1490,6 +1480,7 @@
 
 					searchOpener.addEventListener('click', function (e) {
 						e.preventDefault();
+						deactivateBodyScroll();
 						activateSearchField();
 					});
 
@@ -1500,6 +1491,7 @@
 						const keyCode = e.which || e.keyCode;
 						if (keyCode === 13 || keyCode === 32) {
 							e.preventDefault();
+							deactivateBodyScroll();
 							activateSearchField();
 						}
 					});
@@ -1508,6 +1500,7 @@
 						if (isDesktop()) return; // Prevent on desktop
 
 						menu.classList.add('menu--search');
+						deactivateBodyScroll();
 						activateSearchField();
 					});
 					searchText.setAttribute('aria-owns', 'quicklinks'); // @todo More aria attributes needed in case of autocomplete
@@ -1515,13 +1508,31 @@
 					document.querySelector('.js-search-cancel').addEventListener('click', function (e) {
 						e.preventDefault();
 						deactivateSearchField();
+						if (isDesktop()) activateBodyScroll();
+						searchOpener.focus();
 					});
 
 					searchCurtain.classList.add('search-curtain');
 
 					searchCurtain.addEventListener('click', function () {
 						deactivateSearchField();
+						activateBodyScroll();
 					});
+				}
+
+				function activateMenu() {
+					header.classList.add('menu-open');
+					setTimeout(() => menuButtons[1].focus(), 1);
+
+					deactivateBodyScroll();
+				}
+
+				function deactivateMenu() {
+					header.classList.remove('menu-open');
+					setTimeout(() => menuButtons[0].focus(), 1);
+
+					activateBodyScroll();
+					deactivateSearchField();
 				}
 
 				function activateSearchField() {
@@ -1534,13 +1545,14 @@
 					searchSubmit.setAttribute('tabindex', '0');
 					searchOpener.setAttribute('tabindex', '-1');
 
-					focusSearchText();
-					deactivateBodyScroll();
-
 					if (isDesktop()) {
+						setTimeout(() => searchText.focus(), DEFAULT_DURATION * 2);
+
 						header.parentNode.insertBefore(searchCurtain, header.nextSibling);
 						window.getComputedStyle(searchCurtain).opacity;
 						searchCurtain.classList.add('search-curtain--in');
+					} else {
+						searchText.focus();
 					}
 				}
 
@@ -1556,23 +1568,12 @@
 					searchSubmit.setAttribute('tabindex', '-1');
 					searchOpener.setAttribute('tabindex', '0');
 
-					if (isDesktop()) {
-						if (searchCurtain.parentNode) {
-							searchCurtain.classList.remove('search-curtain--in');
-							setTimeout(() => {
-								searchCurtain.parentNode.removeChild(searchCurtain);
-							}, DEFAULT_DURATION);
-						}
-
-						activateBodyScroll();
-					}
-				}
-
-				function focusSearchText() {
-					if (isDesktop()) {
-						setTimeout(() => searchText.focus(), DEFAULT_DURATION * 2);
-					} else {
-						searchText.focus();
+					if (searchCurtain.parentNode) {
+						searchCurtain.classList.remove('search-curtain--in');
+						setTimeout(() => {
+							if (!searchCurtain.parentNode) return;
+							searchCurtain.parentNode.removeChild(searchCurtain);
+						}, DEFAULT_DURATION);
 					}
 				}
 
@@ -1593,12 +1594,23 @@
 					document.body.style.overflowY = 'hidden';
 				}
 
-				function isDesktop() {
-					return getViewportWidth() >= MIN_WIDTH_BREAKPOINT;
+				function initRoleButton(buttons) {
+					for (let i = 0; i < buttons.length; i++) {
+						buttons[i].setAttribute('role', 'button');
+
+						buttons[i].addEventListener('keydown', function (e) {
+							const keyCode = e.which || e.keyCode;
+
+							if (keyCode === 13 || keyCode === 32) {
+								e.preventDefault();
+								buttons[i].click();
+							}
+						});
+					}
 				}
 
-				function getViewportWidth() {
-					return Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+				function isDesktop() {
+					return mq.matches;
 				}
 
 				main();				
